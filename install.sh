@@ -4,72 +4,79 @@
 OWNER="milktart"
 REPO="milk"
 BINARY_NAME="milk"
-INSTALL_PATH="/usr/local/bin" # Common location for user-installed commands
-RELEASE_TAG="v0.0.1"          # **MUST MATCH YOUR GITHUB RELEASE TAG**
+INSTALL_PATH="/usr/local/bin" 
 # ---------------------
 
 echo "🚀 Starting installation of $BINARY_NAME..."
 
-# 1. Detect OS and Architecture (GoReleaser format)
-OS=$(uname -s) # Note: We use the raw output here
+# --- 1. Dynamically Fetch the Latest Release Tag ---
+echo "Fetching latest release tag from GitHub..."
+
+# Use curl to get the latest release data. 
+# We look for the 'tag_name' field in the JSON response.
+# We use 'grep' and 'awk' to extract the tag name without needing 'jq'.
+RELEASE_TAG=$(
+  curl -sS "https://api.github.com/repos/$OWNER/$REPO/releases/latest" \
+  | grep '"tag_name":' \
+  | awk -F '"' '{print $4}'
+)
+
+if [ -z "$RELEASE_TAG" ]; then
+    echo "Error: Could not determine the latest release tag. Exiting."
+    exit 1
+fi
+
+echo "Latest release detected: $RELEASE_TAG"
+
+# --- 2. Detect OS and Architecture (GoReleaser format) ---
+OS=$(uname -s)
 ARCH=$(uname -m)
 
 case $ARCH in
-  x86_64) ARCH="x86_64" ;; # GoReleaser uses x86_64 for Linux/Windows AMD64
+  x86_64) ARCH="x86_64" ;; 
   arm64) ARCH="arm64" ;; 
   *) echo "Unsupported architecture: $ARCH" && exit 1 ;;
 esac
 
-# GoReleaser artifact naming convention:
-# {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
-# Example: milk_1.0.0_Linux_x86_64
-FILENAME="$BINARY_NAME-$(echo $OS | sed 's/Darwin/darwin/g' | sed 's/Linux/linux/g' | sed 's/Windows/windows/g')-$ARCH" 
-# ^--- This is still custom, let's use the full official GoReleaser template for simplicity:
-
-# Let's use the GoReleaser official template naming for the URL construction
-# $BINARY_NAME gets replaced with 'milk' by goreleaser
-# The correct template for the asset name is: {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+# GoReleaser artifacts are named: {{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
 # e.g., milk_v1.0.0_Linux_x86_64
 
-# Extract the version tag from the download script itself (we don't have it here, 
-# so we must assume a hardcoded tag or get the LATEST tag from the API)
-# Getting the latest tag via API is more robust, but adds complexity.
-# For simplicity, let's stick to a hardcoded tag for now, but always update the script:
-
-# Construct the exact file name created by GoReleaser
-GORELEASER_OS=$(uname -s | sed 's/Darwin/Darwin/g' | sed 's/Linux/Linux/g') # Note: Title case required by GoReleaser
-GORELEASER_ARCH=$(uname -m | sed 's/x86_64/x86_64/g' | sed 's/arm64/arm64/g')
+# Capitalize OS names as GoReleaser does (Linux, Darwin)
+GORELEASER_OS=$(echo $OS | sed 's/Darwin/Darwin/g' | sed 's/Linux/Linux/g')
 
 # Final file name template: milk_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
-DOWNLOAD_ASSET_NAME="${BINARY_NAME}_${RELEASE_TAG}_${GORELEASER_OS}_${GORELEASER_ARCH}"
+DOWNLOAD_ASSET_NAME="${BINARY_NAME}_${RELEASE_TAG}_${GORELEASER_OS}_${ARCH}"
 
 DOWNLOAD_URL="https://github.com/$OWNER/$REPO/releases/download/$RELEASE_TAG/$DOWNLOAD_ASSET_NAME"
 
-echo "Detected OS/Arch: $OS/$ARCH"
-echo "Downloading binary from: $DOWNLOAD_URL"
+echo "Detected OS/Arch: $GORELEASER_OS/$ARCH"
+echo "Attempting to download binary: $DOWNLOAD_ASSET_NAME"
 
-# 2. Download the Binary
+# --- 3. Download the Binary ---
+TEMP_FILE="/tmp/$BINARY_NAME-$RELEASE_TAG"
+
 if command -v curl >/dev/null 2>&1; then
-  DOWNLOAD_CMD="curl -sSL -o /tmp/$BINARY_NAME-$RELEASE_TAG $DOWNLOAD_URL"
+  DOWNLOAD_CMD="curl -fsSL -o $TEMP_FILE $DOWNLOAD_URL"
 elif command -v wget >/dev/null 2>&1; then
-  DOWNLOAD_CMD="wget -qO /tmp/$BINARY_NAME-$RELEASE_TAG $DOWNLOAD_URL"
+  DOWNLOAD_CMD="wget -qO $TEMP_FILE $DOWNLOAD_URL"
 else
   echo "Error: Neither curl nor wget found. Please install one to continue."
   exit 1
 fi
 
 if ! $DOWNLOAD_CMD; then
-    echo "Error: Failed to download binary. Check if the release tag '$RELEASE_TAG' and assets exist."
+    echo "Error: Failed to download binary from $DOWNLOAD_URL."
+    echo "Check if the release tag '$RELEASE_TAG' and the asset '$DOWNLOAD_ASSET_NAME' exist."
     exit 1
 fi
 
 echo "Download complete. Installing to $INSTALL_PATH..."
 
-# 3. Install the Binary
-chmod +x /tmp/$BINARY_NAME-$RELEASE_TAG
+# --- 4. Install the Binary ---
+chmod +x $TEMP_FILE
 
-# Use 'sudo' for /usr/local/bin, as standard users often lack write permission
-if ! sudo mv /tmp/$BINARY_NAME-$RELEASE_TAG $INSTALL_PATH/$BINARY_NAME; then
+# Use 'sudo' for /usr/local/bin
+if ! sudo mv $TEMP_FILE $INSTALL_PATH/$BINARY_NAME; then
   echo "Error: Installation failed. You may need to run this script with elevated permissions."
   exit 1
 fi
