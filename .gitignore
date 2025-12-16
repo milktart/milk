@@ -1,3 +1,7 @@
 
 # Ignore Claude tools
 .claude
+
+
+# Ignore internal build docs
+BUILD.md
