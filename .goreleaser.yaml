@@ -1,0 +1,37 @@
+# .goreleaser.yaml
+# Configuration for GoReleaser
+
+# --- Build Configuration ---
+builds:
+  - id: "milk"
+    # The entry point of your main package (where main.go is located)
+    main: ./main.go
+
+    # The final name of the binary file
+    binary: milk
+
+    # List of operating systems to build for
+    goos:
+      - linux
+      - darwin # macOS
+      - windows
+
+    # List of architectures to build for
+    goarch:
+      - amd64
+      - arm64
+
+    # Template for the output file name (e.g., milk_1.0.0_darwin_amd64)
+    # This is what your install.sh script will be looking for!
+    # NOTE: The default output name is used here.
+
+# --- Archive Configuration ---
+archives:
+  - id: archive
+    # Don't create zip/tar archives, we want raw binaries for the curl/bash install
+    format: binary
+
+# --- Release Configuration ---
+releases:
+  # Creates the GitHub Release itself
+  disable: false

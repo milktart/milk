@@ -1,4 +1,4 @@
-module github.com/yourusername/milk
+module github.com/milktart/milk
 
 go 1.25.4
 

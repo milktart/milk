@@ -1,135 +1,78 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/bash
 
-TOOL_NAME="milk"
-INSTALL_DIR="$HOME/.local/bin"
-REPO="milktart/$TOOL_NAME"   # Change to your GitHub repo
-VERSION="v1.0.0"
-BUILD_FROM_SOURCE=true     # Set to false to always use precompiled binaries
+# --- Configuration ---
+OWNER="milktart"
+REPO="milk"
+BINARY_NAME="milk"
+INSTALL_PATH="/usr/local/bin" # Common location for user-installed commands
+RELEASE_TAG="v0.0.1"          # **MUST MATCH YOUR GITHUB RELEASE TAG**
+# ---------------------
 
-mkdir -p "$INSTALL_DIR"
+echo "🚀 Starting installation of $BINARY_NAME..."
 
-# ------------------------
-# 1. Install Go (if building from source)
-# ------------------------
-install_go() {
-    if ! command -v go &>/dev/null; then
-        echo "Go not found. Installing..."
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            if ! command -v brew &>/dev/null; then
-                echo "Installing Homebrew..."
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-                eval "$(/opt/homebrew/bin/brew shellenv)"
-            fi
-            brew install go
-        elif [[ "$OSTYPE" == "linux"* ]]; then
-            ARCH=$(uname -m)
-            [[ "$ARCH" == "x86_64" ]] && ARCH="amd64"
-            [[ "$ARCH" == "aarch64" ]] && ARCH="arm64"
-            wget "https://go.dev/dl/go1.25.4.linux-${ARCH}.tar.gz" -O /tmp/go.tar.gz
-            if [ -w /usr/local ]; then
-                rm -rf /usr/local/go
-                tar -C /usr/local -xzf /tmp/go.tar.gz
-            else
-                echo "Installing Go to $HOME/.local/go instead (no write permission to /usr/local)..."
-                mkdir -p "$HOME/.local"
-                rm -rf "$HOME/.local/go"
-                tar -C "$HOME/.local" -xzf /tmp/go.tar.gz
-                export PATH=$PATH:$HOME/.local/go/bin
-            fi
-            rm /tmp/go.tar.gz
-            export PATH=$PATH:/usr/local/go/bin
-        else
-            echo "Unsupported OS: $OSTYPE"
-            exit 1
-        fi
-        echo "Go installed: $(go version)"
-    else
-        echo "Go is already installed: $(go version)"
-    fi
-}
+# 1. Detect OS and Architecture (GoReleaser format)
+OS=$(uname -s) # Note: We use the raw output here
+ARCH=$(uname -m)
 
-# ------------------------
-# 2. Add install directory to PATH permanently
-# ------------------------
-update_shell_path() {
-    PATH_LINE="export PATH=\"\$PATH:$INSTALL_DIR\""
-    UPDATED=false
+case $ARCH in
+  x86_64) ARCH="x86_64" ;; # GoReleaser uses x86_64 for Linux/Windows AMD64
+  arm64) ARCH="arm64" ;; 
+  *) echo "Unsupported architecture: $ARCH" && exit 1 ;;
+esac
 
-    # Cover interactive and login shells
-    SHELL_RC_FILES=("$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.bashrc" "$HOME/.bash_profile")
+# GoReleaser artifact naming convention:
+# {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+# Example: milk_1.0.0_Linux_x86_64
+FILENAME="$BINARY_NAME-$(echo $OS | sed 's/Darwin/darwin/g' | sed 's/Linux/linux/g' | sed 's/Windows/windows/g')-$ARCH" 
+# ^--- This is still custom, let's use the full official GoReleaser template for simplicity:
 
-    for rc in "${SHELL_RC_FILES[@]}"; do
-        if [ -f "$rc" ] && [ -w "$rc" ]; then
-            grep -qxF "$PATH_LINE" "$rc" || echo "$PATH_LINE" >> "$rc"
-            UPDATED=true
-            echo "â Added $INSTALL_DIR to PATH in $rc"
-        elif [ ! -f "$rc" ]; then
-            echo "$PATH_LINE" > "$rc"
-            UPDATED=true
-            echo "â Created $rc and added $INSTALL_DIR to PATH"
-        fi
-    done
+# Let's use the GoReleaser official template naming for the URL construction
+# $BINARY_NAME gets replaced with 'milk' by goreleaser
+# The correct template for the asset name is: {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+# e.g., milk_v1.0.0_Linux_x86_64
 
-    if [ "$UPDATED" = false ]; then
-        echo "â ï¸ Could not automatically update PATH. Please add manually:"
-        echo "    export PATH=\"\$PATH:$INSTALL_DIR\""
-    fi
+# Extract the version tag from the download script itself (we don't have it here, 
+# so we must assume a hardcoded tag or get the LATEST tag from the API)
+# Getting the latest tag via API is more robust, but adds complexity.
+# For simplicity, let's stick to a hardcoded tag for now, but always update the script:
 
-    # Apply immediately for the current shell
-    export PATH="$PATH:$INSTALL_DIR"
-}
+# Construct the exact file name created by GoReleaser
+GORELEASER_OS=$(uname -s | sed 's/Darwin/Darwin/g' | sed 's/Linux/Linux/g') # Note: Title case required by GoReleaser
+GORELEASER_ARCH=$(uname -m | sed 's/x86_64/x86_64/g' | sed 's/arm64/arm64/g')
 
-# ------------------------
-# 3. Build from Go source
-# ------------------------
-build_from_source() {
-    if [ ! -f "main.go" ]; then
-        echo "No main.go found, skipping source build."
-        return
-    fi
+# Final file name template: milk_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
+DOWNLOAD_ASSET_NAME="${BINARY_NAME}_${RELEASE_TAG}_${GORELEASER_OS}_${GORELEASER_ARCH}"
 
-    if [ ! -f "go.mod" ]; then
-        go mod init github.com/yourusername/$TOOL_NAME
-    fi
+DOWNLOAD_URL="https://github.com/$OWNER/$REPO/releases/download/$RELEASE_TAG/$DOWNLOAD_ASSET_NAME"
 
-    echo "Installing Go dependencies..."
-    go mod tidy
+echo "Detected OS/Arch: $OS/$ARCH"
+echo "Downloading binary from: $DOWNLOAD_URL"
 
-    echo "Building $TOOL_NAME..."
-    go build -o "$INSTALL_DIR/$TOOL_NAME"
-    echo "â $TOOL_NAME built and installed to $INSTALL_DIR/$TOOL_NAME"
-}
-
-# ------------------------
-# 4. Download precompiled binary (fallback)
-# ------------------------
-download_binary() {
-    OS=$(uname | tr '[:upper:]' '[:lower:]')
-    ARCH=$(uname -m)
-    [[ "$ARCH" == "x86_64" ]] && ARCH="amd64"
-    [[ "$ARCH" == "arm64" ]] && ARCH="arm64"
-
-    BINARY_NAME="${TOOL_NAME}_${OS}_${ARCH}"
-    URL="https://github.com/$REPO/releases/download/$VERSION/$BINARY_NAME"
-
-    echo "Downloading precompiled binary from $URL..."
-    curl -L -o "$INSTALL_DIR/$TOOL_NAME" "$URL"
-    chmod +x "$INSTALL_DIR/$TOOL_NAME"
-    echo "â $TOOL_NAME installed to $INSTALL_DIR/$TOOL_NAME"
-}
-
-# ------------------------
-# Main installer flow
-# ------------------------
-echo "Starting installation of $TOOL_NAME..."
-update_shell_path
-
-if $BUILD_FROM_SOURCE; then
-    install_go
-    build_from_source
+# 2. Download the Binary
+if command -v curl >/dev/null 2>&1; then
+  DOWNLOAD_CMD="curl -sSL -o /tmp/$BINARY_NAME-$RELEASE_TAG $DOWNLOAD_URL"
+elif command -v wget >/dev/null 2>&1; then
+  DOWNLOAD_CMD="wget -qO /tmp/$BINARY_NAME-$RELEASE_TAG $DOWNLOAD_URL"
 else
-    download_binary
+  echo "Error: Neither curl nor wget found. Please install one to continue."
+  exit 1
 fi
 
-echo "Installation complete. You can now run '$TOOL_NAME' from your terminal."
+if ! $DOWNLOAD_CMD; then
+    echo "Error: Failed to download binary. Check if the release tag '$RELEASE_TAG' and assets exist."
+    exit 1
+fi
+
+echo "Download complete. Installing to $INSTALL_PATH..."
+
+# 3. Install the Binary
+chmod +x /tmp/$BINARY_NAME-$RELEASE_TAG
+
+# Use 'sudo' for /usr/local/bin, as standard users often lack write permission
+if ! sudo mv /tmp/$BINARY_NAME-$RELEASE_TAG $INSTALL_PATH/$BINARY_NAME; then
+  echo "Error: Installation failed. You may need to run this script with elevated permissions."
+  exit 1
+fi
+
+echo "✅ $BINARY_NAME installed successfully to $INSTALL_PATH/$BINARY_NAME."
+echo "You can now run '$BINARY_NAME' from anywhere."
