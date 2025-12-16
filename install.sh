@@ -12,9 +12,7 @@ echo "🚀 Starting installation of $BINARY_NAME..."
 # --- 1. Dynamically Fetch the Latest Release Tag ---
 echo "Fetching latest release tag from GitHub..."
 
-# Use curl to get the latest release data. 
-# We look for the 'tag_name' field in the JSON response.
-# We use 'grep' and 'awk' to extract the tag name without needing 'jq'.
+# Fetch the full tag (e.g., v0.0.1)
 RELEASE_TAG=$(
   curl -sS "https://api.github.com/repos/$OWNER/$REPO/releases/latest" \
   | grep '"tag_name":' \
@@ -26,6 +24,10 @@ if [ -z "$RELEASE_TAG" ]; then
     exit 1
 fi
 
+# --- FIX 1: Strip the 'v' from the tag for the asset name ---
+# GoReleaser asset name uses '0.0.1', not 'v0.0.1'
+ASSET_TAG_NAME="${RELEASE_TAG#v}"
+
 echo "Latest release detected: $RELEASE_TAG"
 
 # --- 2. Detect OS and Architecture (GoReleaser format) ---
@@ -33,27 +35,26 @@ OS=$(uname -s)
 ARCH=$(uname -m)
 
 case $ARCH in
-  x86_64) ARCH="x86_64" ;; 
-  arm64) ARCH="arm64" ;; 
+  x86_64) GORELEASER_ARCH="amd64" ;; # GoReleaser uses 'amd64'
+  arm64) GORELEASER_ARCH="arm64" ;; # GoReleaser uses 'arm64'
   *) echo "Unsupported architecture: $ARCH" && exit 1 ;;
 esac
 
-# GoReleaser artifacts are named: {{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
-# e.g., milk_v1.0.0_Linux_x86_64
+# --- FIX 2: Convert OS name to lowercase ---
+# GoReleaser asset name uses 'darwin' and 'linux' (lowercase)
+GORELEASER_OS=$(echo $OS | tr '[:upper:]' '[:lower:]')
 
-# Capitalize OS names as GoReleaser does (Linux, Darwin)
-GORELEASER_OS=$(echo $OS | sed 's/Darwin/Darwin/g' | sed 's/Linux/Linux/g')
+# Final file name template: milk_0.0.1_darwin_arm64
+DOWNLOAD_ASSET_NAME="${BINARY_NAME}_${ASSET_TAG_NAME}_${GORELEASER_OS}_${GORELEASER_ARCH}"
 
-# Final file name template: milk_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
-DOWNLOAD_ASSET_NAME="${BINARY_NAME}_${RELEASE_TAG}_${GORELEASER_OS}_${ARCH}"
-
+# The URL still uses the full tag name with 'v'
 DOWNLOAD_URL="https://github.com/$OWNER/$REPO/releases/download/$RELEASE_TAG/$DOWNLOAD_ASSET_NAME"
 
-echo "Detected OS/Arch: $GORELEASER_OS/$ARCH"
+echo "Detected OS/Arch: $GORELEASER_OS/$GORELEASER_ARCH"
 echo "Attempting to download binary: $DOWNLOAD_ASSET_NAME"
 
 # --- 3. Download the Binary ---
-TEMP_FILE="/tmp/$BINARY_NAME-$RELEASE_TAG"
+TEMP_FILE="/tmp/$BINARY_NAME-$ASSET_TAG_NAME"
 
 if command -v curl >/dev/null 2>&1; then
   DOWNLOAD_CMD="curl -fsSL -o $TEMP_FILE $DOWNLOAD_URL"
