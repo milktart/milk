@@ -2,6 +2,7 @@
 # Configuration for GoReleaser
 
 # --- Build Configuration ---
+# Tells GoReleaser where to find the source code and how to compile it.
 builds:
   - id: "milk"
     # The entry point of your main package (where main.go is located)
@@ -21,17 +22,19 @@ builds:
       - amd64
       - arm64
 
-    # Template for the output file name (e.g., milk_1.0.0_darwin_amd64)
-    # This is what your install.sh script will be looking for!
-    # NOTE: The default output name is used here.
-
 # --- Archive Configuration ---
+# Tells GoReleaser how to package the compiled binaries.
 archives:
   - id: archive
-    # Don't create zip/tar archives, we want raw binaries for the curl/bash install
+    # Setting format to 'binary' tells GoReleaser NOT to create .zip or .tar.gz archives.
+    # It just uploads the raw compiled executable, which is what your install.sh expects.
     format: binary
 
 # --- Release Configuration ---
-releases:
-  # Creates the GitHub Release itself
-  disable: false
+# This is where the error occurred before. It MUST be a top-level field.
+# The default is to create a release, so we can actually omit this block entirely, 
+# but defining it ensures clarity.
+
+# Note: The 'releases:' section is used for settings like draft releases,
+# but the core function of creating the release is handled implicitly 
+# by the 'release' command in the GitHub Action.
