@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash:*)",
+      "Bash(milk:*)",
+      "Bash(source ~/.bashrc)",
+      "Read(//home/home/.local/bin/**)",
+      "Bash(~/.local/bin/milk:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
