@@ -3,7 +3,6 @@ package numbers
 import (
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/milktart/milk/pkg/config"
