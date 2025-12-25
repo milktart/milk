@@ -12,7 +12,7 @@ import (
 
 const (
 	TOOLNAME = "milk"
-	VERSION  = "1.0.0"
+	VERSION  = "0.0.5"
 )
 
 func printMainMenu() {
