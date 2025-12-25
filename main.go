@@ -13,7 +13,7 @@ import (
 
 const (
 	TOOLNAME = "milk"
-	VERSION  = "0.0.7"
+	VERSION  = "0.0.8"
 )
 
 func printMainMenu() {
@@ -79,16 +79,14 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Load configuration once at startup
-	cfg, err := loadConfig()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
-
 	// Route to subcommands
 	switch strings.ToLower(subcommand) {
 	case "numbers":
+		cfg, err := loadConfig()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
 		handler := numbers.NewHandler(cfg)
 		if err := handler.Execute(os.Args[2:]); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
