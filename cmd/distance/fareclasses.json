@@ -1,0 +1,3208 @@
+{
+  "AM":{
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "W":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "L":{
+      "mqd":0.05,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "E":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "AFEU":{
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "W":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "P":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "F":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "S":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "A":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "AF":{
+    "P":{
+      "mqd":0.6,
+      "miles":3,
+      "bonus":1,
+      "cabin":"First"
+    },
+    "F":{
+      "mqd":0.6,
+      "miles":3,
+      "bonus":1,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "O":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Deep Discounted Business"
+    },
+    "W":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "S":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "A":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "U":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "X":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "MU":{
+    "F":{
+      "mqd":0.6,
+      "miles":2.5,
+      "bonus":1,
+      "cabin":"First"
+    },
+    "U":{
+      "mqd":0.6,
+      "miles":3,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":1.75,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "Q":{
+      "mqd":0.3,
+      "miles":1.75,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":1.75,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "W":{
+      "mqd":0.25,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "P":{
+      "mqd":0.25,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "E":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "V":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "Z":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "KLEU":{
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "W":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "P":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "F":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "S":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "A":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "KL":{
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "O":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Deep Discounted Business"
+    },
+    "W":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "S":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "A":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "U":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "X":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "KE":{
+    "P":{
+      "mqd":0.6,
+      "miles":3,
+      "bonus":1,
+      "cabin":"First"
+    },
+    "F":{
+      "mqd":0.6,
+      "miles":3,
+      "bonus":1,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "R":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "W":{
+      "mqd":0.25,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "S":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "E":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "U":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "G":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "LA":{
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.3,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "W":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "P":{
+      "mqd":0.25,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "H":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "K":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "V":{
+      "mqd":0.15,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "X":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    },
+    "A":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "VS":{
+    "J":{
+      "mqd":0.4,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "I":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.3,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "W":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "S":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "K":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "H":{
+      "mqd":0.25,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "V":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "R":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "L":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "E":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "X":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "LY":{
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "W":{
+      "mqd":0.2,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Q":{
+      "mqd":0.2,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "P":{
+      "mqd":0.2,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "V":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":1,
+      "cabin":"Economy"
+    }
+  },
+  "AR":{
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "W":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "S":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "E":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "A":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "UX":{
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "V":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "S":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "U":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "F":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "CI":{
+    "F":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "W":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "U":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "A":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "E":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "V":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "H":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "GA":{
+    "F":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "A":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "P":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "HA":{
+    "F":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "P":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "E":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "W":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "V":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "X":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "H":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "I":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "B":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "M":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "L":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "K":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "AZ":{
+    "J":{
+      "mqd":0.2,
+      "miles":1.75,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1.75,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "E":{
+      "mqd":0.2,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "A":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "P":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "V":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "X":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "W":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "L":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    }
+  },
+  "KQ":{
+    "J":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":1,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1.5,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Discounted Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1.25,
+      "bonus":1,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.75,
+      "bonus":1,
+      "cabin":"Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    },
+    "W":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":1,
+      "cabin":"Discounted Economy"
+    }
+  },
+  "ME":{
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "U":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "SK":{
+    "J":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business/First"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business/First"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business/First"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business/First"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "S":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "P":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "A":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "E":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "W":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "U":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "K":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "L":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "SKSK":{
+    "J":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":2,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":0,
+      "cabin":"Plus  – Premium Economy"
+    },
+    "S":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":0,
+      "cabin":"Plus  – Premium Economy"
+    },
+    "B":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":0,
+      "cabin":"Plus  – Premium Economy"
+    },
+    "P":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":0,
+      "cabin":"Plus  – Premium Economy"
+    },
+    "A":{
+      "mqd":0.2,
+      "miles":1.25,
+      "bonus":0,
+      "cabin":"Plus  – Premium Economy"
+    },
+    "E":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Go – Full Economy"
+    },
+    "M":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Go – Full Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Go – Full Economy"
+    },
+    "Q":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Go – Full Economy"
+    },
+    "V":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Go – Full Economy"
+    },
+    "W":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Go – Full Economy"
+    },
+    "U":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "R":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "G":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Go – Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go – Discounted Economy"
+    },
+    "E":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "M":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "H":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "W":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "U":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "K":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "L":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "O":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Go Light – Deeply Discounted Economy"
+    }
+  },
+  "SV":{
+    "F":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "P":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "A":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "E":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "U":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "RO":{
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "U":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "R":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "G":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "S":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "E":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "A":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "F":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "VN":{
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "W":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "Z":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "U":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "B":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "R":{
+      "mqd":0.05,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "E":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "A":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "G":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "P":{
+      "mqd":0.05,
+      "miles":0.1,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "WS":{
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "W":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "O":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "R":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Premium Economy"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "H":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "S":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "X":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "T":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "K":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "L":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  },
+  "MF":{
+    "F":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "A":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"First"
+    },
+    "J":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "C":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "D":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "I":{
+      "mqd":0.2,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Business"
+    },
+    "Y":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "H":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "B":{
+      "mqd":0.15,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "M":{
+      "mqd":0.1,
+      "miles":1,
+      "bonus":0,
+      "cabin":"Full Economy"
+    },
+    "L":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Economy"
+    },
+    "K":{
+      "mqd":0.1,
+      "miles":0.5,
+      "bonus":0,
+      "cabin":"Discounted Economy"
+    },
+    "N":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "Q":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    },
+    "V":{
+      "mqd":0.05,
+      "miles":0.25,
+      "bonus":0,
+      "cabin":"Deep Discounted Economy"
+    }
+  }
+}

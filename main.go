@@ -6,13 +6,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/milktart/milk/cmd/distance"
 	"github.com/milktart/milk/cmd/numbers"
 	"github.com/milktart/milk/pkg/config"
 )
 
 const (
 	TOOLNAME = "milk"
-	VERSION  = "0.0.5"
+	VERSION  = "0.0.7"
 )
 
 func printMainMenu() {
@@ -95,8 +96,11 @@ func main() {
 		}
 
 	case "distance":
-		fmt.Println("Distance command is not yet implemented")
-		os.Exit(1)
+		handler := distance.NewHandler()
+		if err := handler.Execute(os.Args[2:]); err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
 
 	default:
 		fmt.Fprintf(os.Stderr, "Error: unknown command '%s'\n\n", subcommand)
