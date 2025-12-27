@@ -1,12 +1,21 @@
 package config
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/dlclark/regexp2"
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	//go:embed patterns.yaml
+	patternsYAMLBytes []byte
+
+	//go:embed regions.yaml
+	regionsYAMLBytes []byte
 )
 
 // Note: This package loads configuration from YAML files in the config/ directory
@@ -63,6 +72,37 @@ func Load(configDir string) (*Config, error) {
 	}
 
 	if err := yaml.Unmarshal(regionsData, &regionsYAML); err != nil {
+		return nil, fmt.Errorf("failed to parse regions.yaml: %w", err)
+	}
+
+	cfg = &Config{
+		Patterns: patternsYAML.Patterns,
+		Regions:  regionsYAML.Regions,
+	}
+
+	// Compile regexes
+	if err := compileRegexes(); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}
+
+// LoadFromBytes loads and parses configuration from embedded YAML bytes
+func LoadFromBytes() (*Config, error) {
+	var patternsYAML struct {
+		Patterns PatternsConfig `yaml:"patterns"`
+	}
+
+	if err := yaml.Unmarshal(patternsYAMLBytes, &patternsYAML); err != nil {
+		return nil, fmt.Errorf("failed to parse patterns.yaml: %w", err)
+	}
+
+	var regionsYAML struct {
+		Regions RegionsConfig `yaml:"regions"`
+	}
+
+	if err := yaml.Unmarshal(regionsYAMLBytes, &regionsYAML); err != nil {
 		return nil, fmt.Errorf("failed to parse regions.yaml: %w", err)
 	}
 

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/milktart/milk/cmd/distance"
@@ -32,38 +31,6 @@ func printMainMenu() {
 	fmt.Printf("  %s distance --from \"New York\" --to \"Los Angeles\"\n", TOOLNAME)
 }
 
-func loadConfig() (*config.Config, error) {
-	// Find config directory relative to executable
-	exePath, err := os.Executable()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get executable path: %w", err)
-	}
-
-	exeDir := filepath.Dir(exePath)
-	configDir := filepath.Join(exeDir, "config")
-
-	// Try to load from same directory as executable
-	cfg, err := config.Load(configDir)
-	if err == nil {
-		return cfg, nil
-	}
-
-	// Try to load from parent directory (for development)
-	configDir = filepath.Join(exeDir, "..", "config")
-	cfg, err = config.Load(configDir)
-	if err == nil {
-		return cfg, nil
-	}
-
-	// Try from current working directory
-	configDir = "config"
-	cfg, err = config.Load(configDir)
-	if err == nil {
-		return cfg, nil
-	}
-
-	return nil, fmt.Errorf("failed to load configuration from any location")
-}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -82,7 +49,7 @@ func main() {
 	// Route to subcommands
 	switch strings.ToLower(subcommand) {
 	case "numbers":
-		cfg, err := loadConfig()
+		cfg, err := config.LoadFromBytes()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
