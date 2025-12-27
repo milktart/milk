@@ -12,7 +12,7 @@ import (
 
 const (
   TOOLNAME = "milk"
-  VERSION  = "0.0.10"
+  VERSION  = "0.0.11"
 )
 
 func printMainMenu() {
@@ -27,9 +27,9 @@ func printMainMenu() {
   fmt.Printf("Use \"%s <command> --help\" for more information about a command.\n\n", TOOLNAME)
   fmt.Println("Examples:")
   fmt.Printf("  %s numbers -c 212 415 808 -r Canada -p VIP\n", TOOLNAME)
-  fmt.Printf("  %s numbers --Canada -c 416 604\n", TOOLNAME)
-  fmt.Printf("  %s flight -R SEA TPE\n", TOOLNAME)
-  fmt.Printf("  %s flight AUS KL.Z AMS KL.Z HEL XX PRG KL.N AMS KL.Z AUS\n", TOOLNAME)
+  fmt.Printf("  %s numbers --Canada\n", TOOLNAME)
+  fmt.Printf("  %s flights -R SEA TPE\n", TOOLNAME)
+  fmt.Printf("  %s flights AUS KL.Z AMS KL.Z HEL XX PRG KL.N AMS KL.Z AUS\n", TOOLNAME)
 }
 
 
