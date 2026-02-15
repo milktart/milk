@@ -35,6 +35,7 @@ func (h *Handler) Execute(args []string) error {
 	h.FlagSet.StringVar(patternFlag, "pattern", "", "Same as -p")
 
 	canadaFlag := h.FlagSet.Bool("Canada", false, "Shorthand for -r Canada")
+        CANFlag := h.FlagSet.Bool("CAN", false, "Shorthand for -r CAN")
 	CAFlag := h.FlagSet.Bool("CA", false, "Shorthand for -r CA")
 	NYFlag := h.FlagSet.Bool("NY", false, "Shorthand for -r NY")
 	NYCFlag := h.FlagSet.Bool("NYC", false, "Shorthand for -r NYC")
@@ -48,7 +49,7 @@ func (h *Handler) Execute(args []string) error {
 		fmt.Println("\nExamples:")
 		fmt.Println("  milk numbers -c 212 415 808 -r Canada -p VIP,platinum")
 		fmt.Println("  milk numbers --code 212,415,808 --region TX --pattern VIP")
-		fmt.Println("  milk numbers --Canada -c 416 604")
+		fmt.Println("  milk numbers -c 416 604")
 	}
 
 	if err := h.FlagSet.Parse(args); err != nil {
@@ -59,6 +60,9 @@ func (h *Handler) Execute(args []string) error {
 	if *canadaFlag {
 		region = "Canada"
 	}
+        if *CANFlag {
+                region = "CAN"
+        }
 	if *CAFlag {
 		region = "CA"
 	}
