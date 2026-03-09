@@ -22,6 +22,7 @@ func NewHandler() *Handler {
 // Execute runs the flights command with the provided arguments.
 func (h *Handler) Execute(args []string) error {
 	addFlag := h.FlagSet.Bool("add", false, "Add a booking: --add PNR LASTNAME/FIRSTNAME")
+	removeFlag := h.FlagSet.Bool("remove", false, "Remove a booking by PNR: --remove PNR")
 	listFlag := h.FlagSet.Bool("list", false, "List all saved bookings grouped by passenger")
 	pullFlag := h.FlagSet.Bool("pull", false, "Fetch a PNR without saving: --pull PNR LASTNAME/FIRSTNAME")
 	refreshFlag := h.FlagSet.Bool("refresh", false, "Force re-fetch bookings (ignore cache); optionally pass a PNR as the next argument to refresh only that booking")
@@ -43,6 +44,7 @@ func (h *Handler) Execute(args []string) error {
 		fmt.Println("  milk flights --add Z0Y3X5 DOE/JANEALICE")
 		fmt.Println("  milk flights --list")
 		fmt.Println("  milk flights --pull Z0Y3X5 DOE/ALICEJANE")
+		fmt.Println("  milk flights --remove Z0Y3X5")
 		fmt.Println("  milk flights --visible")
 	}
 
@@ -68,6 +70,19 @@ func (h *Handler) Execute(args []string) error {
 			return fmt.Errorf("--add requires non-empty PNR, last name, and first name")
 		}
 		return AddBooking(pnr, first, last)
+	}
+
+	// --remove PNR
+	if *removeFlag {
+		rest := h.FlagSet.Args()
+		if len(rest) < 1 {
+			return fmt.Errorf("--remove requires one argument: PNR")
+		}
+		pnr := strings.ToUpper(strings.TrimSpace(rest[0]))
+		if pnr == "" {
+			return fmt.Errorf("--remove requires a non-empty PNR")
+		}
+		return RemoveBooking(pnr)
 	}
 
 	// --list: show all saved bookings grouped by passenger
@@ -145,38 +160,70 @@ func (h *Handler) Execute(args []string) error {
 	}
 
 	if len(toFetch) > 0 {
-		sem := make(chan struct{}, maxConcurrent)
+		// Partition: bookings with cached headers can go straight to the API;
+		// the rest need a browser session to capture headers first.
+		var needBrowser, hasHeaders []Booking
+		for _, b := range toFetch {
+			if HasAPICredentials(cache[b.PNR]) {
+				hasHeaders = append(hasHeaders, b)
+			} else {
+				needBrowser = append(needBrowser, b)
+			}
+		}
+
+		// Capture session headers once for all browser-needed bookings.
+		var freshHeaders map[string]string
+		if len(needBrowser) > 0 {
+			fmt.Println("Opening browser to capture session…")
+			var err error
+			freshHeaders, err = CaptureSessionHeaders(needBrowser[0], !*visibleFlag)
+			if err != nil {
+				fmt.Printf("Warning: could not capture session headers (%v); falling back to per-PNR browser\n", err)
+			}
+		}
+
 		var mu sync.Mutex
 		var wg sync.WaitGroup
+		sem := make(chan struct{}, maxConcurrent)
 
-		for _, b := range toFetch {
+		fetch := func(booking Booking, headers map[string]string) {
+			defer wg.Done()
+			defer func() { <-sem }()
+			fmt.Printf("Fetching %s (%s)…\n", booking.PNR, formatName(booking.First, booking.Last))
+			var entry *CacheEntry
+			if headers != nil {
+				entry = FetchBookingFromAPI(booking, headers)
+				if entry.RawError == "" && len(entry.Flights) > 0 {
+					entry.SessionHeaders = headers
+				}
+			} else {
+				entry = FetchBooking(booking, !*visibleFlag)
+			}
+			mu.Lock()
+			if entry.RawError != "" || len(entry.Flights) == 0 {
+				if prior := cache[booking.PNR]; prior != nil {
+					if entry.RawError != "" {
+						fmt.Printf("Warning: refresh failed for %s (%s), keeping cached data: %s\n", booking.PNR, formatName(booking.First, booking.Last), entry.RawError)
+					} else {
+						fmt.Printf("Warning: refresh returned no flights for %s (%s), keeping cached data\n", booking.PNR, formatName(booking.First, booking.Last))
+					}
+					entry = prior
+				}
+			}
+			results[booking.PNR] = entry
+			cache[booking.PNR] = entry
+			mu.Unlock()
+		}
+
+		for _, b := range hasHeaders {
 			wg.Add(1)
 			sem <- struct{}{}
-			go func(booking Booking) {
-				defer wg.Done()
-				defer func() { <-sem }()
-				fmt.Printf("Fetching %s (%s)…\n", booking.PNR, formatName(booking.First, booking.Last))
-				var entry *CacheEntry
-				if prior := cache[booking.PNR]; HasAPICredentials(prior) {
-					entry = FetchBookingFromAPI(booking, prior.AuthToken)
-				} else {
-					entry = FetchBooking(booking, !*visibleFlag)
-				}
-				mu.Lock()
-				if entry.RawError != "" || len(entry.Flights) == 0 {
-					if prior := cache[booking.PNR]; prior != nil {
-						if entry.RawError != "" {
-							fmt.Printf("Warning: refresh failed for %s (%s), keeping cached data: %s\n", booking.PNR, formatName(booking.First, booking.Last), entry.RawError)
-						} else {
-							fmt.Printf("Warning: refresh returned no flights for %s (%s), keeping cached data\n", booking.PNR, formatName(booking.First, booking.Last))
-						}
-						entry = prior
-					}
-				}
-				results[booking.PNR] = entry
-				cache[booking.PNR] = entry
-				mu.Unlock()
-			}(b)
+			go fetch(b, cache[b.PNR].SessionHeaders)
+		}
+		for _, b := range needBrowser {
+			wg.Add(1)
+			sem <- struct{}{}
+			go fetch(b, freshHeaders) // nil if capture failed → falls back to per-PNR browser
 		}
 		wg.Wait()
 

@@ -98,9 +98,13 @@ func DisplayAll(entries []*CacheEntry) {
 			if f.DistanceMiles > 0 {
 				dist = fmt.Sprintf("%d", f.DistanceMiles)
 			}
+			pnr := e.PNR
+			if i := strings.Index(pnr, "/"); i >= 0 {
+				pnr = pnr[:i]
+			}
 			rows = append(rows, displayRow{
 				sortKey: sortKey,
-				pnr:     e.PNR,
+				pnr:     pnr,
 				flt:     fltNum,
 				org:     depIATA,
 				dst:     arrIATA,
@@ -125,23 +129,33 @@ func DisplayAll(entries []*CacheEntry) {
 		return
 	}
 
-	// Column widths
+	// Column widths: start with header width, expand to fit data.
 	cols := []struct {
 		header string
 		width  int
 	}{
-		{"PNR", 7},
-		{"FLT", 7},
-		{"ORG", 5},
-		{"DST", 5},
-		{"DEP", 13},
-		{"ARR", 13},
-		{"PAX", 24},
-		{"SEAT", 6},
-		{"CLS", 5},
-		{"A/C", 9},
-		{"STATUS", 15},
-		{"MI", 6},
+		{"PNR", 6},
+		{"FLT", 6},
+		{"ORG", 3},
+		{"DST", 3},
+		{"DEP", 9},
+		{"ARR", 9},
+		{"PAX", 3},
+		{"SEAT", 4},
+		{"CLS", 3},
+		{"A/C", 3},
+		{"STATUS", 6},
+		{"MI", 2},
+	}
+	vals := func(r displayRow) []string {
+		return []string{r.pnr, r.flt, r.org, r.dst, r.dep, r.arr, r.pax, r.seat, r.cls, r.ac, r.status, r.dist}
+	}
+	for _, r := range rows {
+		for i, v := range vals(r) {
+			if len(v) > cols[i].width {
+				cols[i].width = len(v)
+			}
+		}
 	}
 
 	termW, _, err := term.GetSize(int(os.Stdout.Fd()))
@@ -155,19 +169,21 @@ func DisplayAll(entries []*CacheEntry) {
 	cyan := "\033[1;96m"
 	reset := "\033[0m"
 
+	const gap = "  " // spacing between columns
+
 	// Header
 	fmt.Println()
 	fmt.Print(bold)
 	for _, c := range cols {
-		fmt.Printf(" %-*s", c.width, c.header)
+		fmt.Printf("%s%-*s", gap, c.width, c.header)
 	}
 	fmt.Println(reset)
 
 	// Separator
 	fmt.Print(dim)
-	total := 1
+	total := 0
 	for _, c := range cols {
-		total += c.width + 1
+		total += c.width + len(gap)
 	}
 	fmt.Println(strings.Repeat("─", total) + reset)
 
@@ -205,18 +221,18 @@ func DisplayAll(entries []*CacheEntry) {
 			distStr = ""
 		}
 
-		fmt.Printf(" %s%-*s%s", cyan, cols[0].width, pnrStr, reset)
-		fmt.Printf(" %-*s", cols[1].width, fltStr)
-		fmt.Printf(" %-*s", cols[2].width, orgStr)
-		fmt.Printf(" %-*s", cols[3].width, dstStr)
-		fmt.Printf(" %-*s", cols[4].width, depStr)
-		fmt.Printf(" %-*s", cols[5].width, arrStr)
-		fmt.Printf(" %-*s", cols[6].width, truncate(r.pax, cols[6].width))
-		fmt.Printf(" %-*s", cols[7].width, r.seat)
-		fmt.Printf(" %-*s", cols[8].width, clsStr)
-		fmt.Printf(" %-*s", cols[9].width, acStr)
-		fmt.Printf(" %s%-*s%s", sc, cols[10].width, statusStr, sr)
-		fmt.Printf(" %-*s", cols[11].width, distStr)
+		fmt.Printf("%s%s%-*s%s", gap, cyan, cols[0].width, pnrStr, reset)
+		fmt.Printf("%s%-*s", gap, cols[1].width, fltStr)
+		fmt.Printf("%s%-*s", gap, cols[2].width, orgStr)
+		fmt.Printf("%s%-*s", gap, cols[3].width, dstStr)
+		fmt.Printf("%s%-*s", gap, cols[4].width, depStr)
+		fmt.Printf("%s%-*s", gap, cols[5].width, arrStr)
+		fmt.Printf("%s%-*s", gap, cols[6].width, truncate(r.pax, cols[6].width))
+		fmt.Printf("%s%-*s", gap, cols[7].width, r.seat)
+		fmt.Printf("%s%-*s", gap, cols[8].width, clsStr)
+		fmt.Printf("%s%-*s", gap, cols[9].width, acStr)
+		fmt.Printf("%s%s%-*s%s", gap, sc, cols[10].width, statusStr, sr)
+		fmt.Printf("%s%-*s", gap, cols[11].width, distStr)
 		fmt.Println()
 
 		prevKey = key

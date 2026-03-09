@@ -137,6 +137,49 @@ func AddBooking(pnr, first, last string) error {
 	return saveBookings(path, entries)
 }
 
+// RemoveBooking removes a PNR from bookings.json.
+// If the passenger has no remaining PNRs, the passenger entry is also removed.
+func RemoveBooking(pnr string) error {
+	pnr = strings.ToUpper(strings.TrimSpace(pnr))
+
+	path := bookingsFile()
+	data, err := os.ReadFile(path)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("PNR %s not found (no bookings file)", pnr)
+	}
+	if err != nil {
+		return err
+	}
+	var entries []passengerEntry
+	if err := json.Unmarshal(data, &entries); err != nil {
+		return fmt.Errorf("parse bookings.json: %w", err)
+	}
+
+	found := false
+	var updated []passengerEntry
+	for _, e := range entries {
+		var remaining []string
+		for _, p := range e.PNRs {
+			if strings.EqualFold(p, pnr) {
+				found = true
+			} else {
+				remaining = append(remaining, p)
+			}
+		}
+		if len(remaining) > 0 {
+			e.PNRs = remaining
+			updated = append(updated, e)
+		}
+	}
+
+	if !found {
+		return fmt.Errorf("PNR %s not found in bookings", pnr)
+	}
+
+	fmt.Printf("Removed PNR %s.\n", pnr)
+	return saveBookings(path, updated)
+}
+
 func saveBookings(path string, entries []passengerEntry) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return err

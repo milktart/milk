@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -18,27 +19,23 @@ type apiRequest struct {
 	Surname         string `json:"surname"`
 }
 
-// HasAPICredentials reports whether the entry has an auth token for direct API calls.
-func HasAPICredentials(e *CacheEntry) bool {
-	return e != nil && e.AuthToken != ""
-}
 
 // FetchBookingFromAPI fetches booking data directly from the Delta API using a
-// bearer token captured from a prior browser session.
+// session headers captured from a prior browser session.
 // Returns a new CacheEntry; on error the entry will have RawError set.
-func FetchBookingFromAPI(b Booking, authToken string) *CacheEntry {
+func FetchBookingFromAPI(b Booking, sessionHeaders map[string]string) *CacheEntry {
 	entry := &CacheEntry{
-		PNR:       b.PNR,
-		Passenger: formatName(b.First, b.Last),
-		FetchedAt: time.Now().UTC(),
-		AuthToken: authToken,
+		PNR:            b.PNR,
+		Passenger:      formatName(b.First, b.Last),
+		FetchedAt:      time.Now().UTC(),
+		SessionHeaders: sessionHeaders,
 	}
 
 	payload, err := json.Marshal(apiRequest{
-		Using:          "CONFIRMATION",
+		Using:           "CONFIRMATION",
 		ConfirmationNum: b.PNR,
-		GivenNames:     b.First,
-		Surname:        b.Last,
+		GivenNames:      b.First,
+		Surname:         b.Last,
 	})
 	if err != nil {
 		entry.RawError = fmt.Sprintf("api marshal: %v", err)
@@ -50,12 +47,20 @@ func FetchBookingFromAPI(b Booking, authToken string) *CacheEntry {
 		entry.RawError = fmt.Sprintf("api request: %v", err)
 		return entry
 	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("Accept", "application/json, text/plain, */*")
 	req.Header.Set("Origin", "https://www.delta.com")
-	req.Header.Set("Referer", "https://www.delta.com/us/en/my-trips/trip-details")
+	req.Header.Set("Referer", "https://www.delta.com/")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-	req.Header.Set("Authorization", authToken)
+	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+	for _, k := range []string{"Cookie", "appId", "channelId", "transactionid"} {
+		if v, ok := sessionHeaders[k]; ok && v != "" {
+			if k == "Cookie" {
+				v = cookieWithoutBmSs(v)
+			}
+			req.Header.Set(k, v)
+		}
+	}
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := client.Do(req)
@@ -71,10 +76,11 @@ func FetchBookingFromAPI(b Booking, authToken string) *CacheEntry {
 		return entry
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		entry.RawError = fmt.Sprintf("api status %d: %s", resp.StatusCode, truncate(string(body), 120))
 		return entry
 	}
+
 
 	flights, err := parseAPIResponse(body, entry.Passenger)
 	if err != nil {
@@ -85,28 +91,67 @@ func FetchBookingFromAPI(b Booking, authToken string) *CacheEntry {
 	return entry
 }
 
-// parseAPIResponse maps the Delta API JSON response into the existing Flight slice.
+// parseAPIResponse maps the Delta API JSON response into Flight slices.
+// The response structure is:
+//   travelReservations[].trips[].segments[].legs[] — flight/leg data
+//   travelReservations[].passengers[]             — pax names + per-segment seat/cabin
 func parseAPIResponse(body []byte, fallbackPassenger string) ([]Flight, error) {
 	var raw struct {
 		TravelReservations []struct {
-			Segments []struct {
-				FlightNumber  string `json:"flightNumber"`
-				DepartureCode string `json:"departureAirportCode"`
-				ArrivalCode   string `json:"arrivalAirportCode"`
-				DepartureTime string `json:"scheduledDepartureLocalTs"`
-				ArrivalTime   string `json:"scheduledArrivalLocalTs"`
-				Aircraft      string `json:"aircraftType"`
-				Status        string `json:"segmentStatus"`
-				DistanceMiles int    `json:"distanceMiles"`
-				Travelers     []struct {
-					FirstName       string `json:"firstName"`
-					LastName        string `json:"lastName"`
-					Seat            string `json:"seatNumber"`
-					Cabin           string `json:"cabinName"`
-					FareClass     string `json:"fareClass"`
-					FareBasisCode string `json:"fareBasisCode"`
-				} `json:"travelers"`
-			} `json:"segments"`
+			Passengers []struct {
+				GivenNames string `json:"givenNames"`
+				Surname    string `json:"surname"`
+				PassengerTrips []struct {
+					TripID           int `json:"tripId"`
+					PassengerSegments []struct {
+						SegmentID        int    `json:"segmentId"`
+						BookedCabinClass struct {
+							Code string `json:"code"`
+						} `json:"bookedCabinClass"`
+						PassengerLegs []struct {
+							LegID           int `json:"legId"`
+							SeatAssignments []struct {
+								Seat struct {
+									Number string `json:"number"`
+								} `json:"seat"`
+							} `json:"seatAssignments"`
+						} `json:"passengerLegs"`
+					} `json:"passengerSegments"`
+				} `json:"passengerTrips"`
+			} `json:"passengers"`
+			Trips []struct {
+				TripID        int `json:"tripId"`
+				DistanceMiles int `json:"distanceMiles"`
+				Segments []struct {
+					SegmentID int `json:"segmentId"`
+					FlightNum string `json:"flightNum"`
+					MarketingSegment struct {
+						FareBasisCode string `json:"fareBasisCode"`
+					} `json:"marketingSegment"`
+					Legs []struct {
+						LegID   int `json:"legId"`
+						FlightNum string `json:"flightNum"`
+						TransportOrigin struct {
+							ScheduledDepartureLocalDateTime string `json:"scheduledDepartureLocalDateTime"`
+							Station struct {
+								Code string `json:"code"`
+							} `json:"station"`
+						} `json:"transportOrigin"`
+						TransportDestination struct {
+							ScheduledArrivalLocalDateTime string `json:"scheduledArrivalLocalDateTime"`
+							Station struct {
+								Code string `json:"code"`
+							} `json:"station"`
+						} `json:"transportDestination"`
+						TransportEquipment struct {
+							Name string `json:"name"`
+						} `json:"transportEquipment"`
+						Status          string `json:"status"`
+						DistanceMiles   int    `json:"distanceMiles"`
+						MealServiceCode string `json:"mealServiceCode"`
+					} `json:"legs"`
+				} `json:"segments"`
+			} `json:"trips"`
 		} `json:"travelReservations"`
 	}
 
@@ -116,48 +161,96 @@ func parseAPIResponse(body []byte, fallbackPassenger string) ([]Flight, error) {
 
 	var flights []Flight
 	for _, res := range raw.TravelReservations {
-		for _, seg := range res.Segments {
-			nPax := len(seg.Travelers)
-			if nPax == 0 {
-				nPax = 1
-			}
-			dep := formatAPIAirportTime(seg.DepartureCode, seg.DepartureTime)
-			arr := formatAPIAirportTime(seg.ArrivalCode, seg.ArrivalTime)
+		nPax := len(res.Passengers)
+		if nPax == 0 {
+			nPax = 1
+		}
 
-			for i := 0; i < nPax; i++ {
-				seat, cabin, paxName := "—", "", fallbackPassenger
-				if i < len(seg.Travelers) {
-					t := seg.Travelers[i]
-					if t.Seat != "" {
-						seat = t.Seat
+		for _, trip := range res.Trips {
+			for _, seg := range trip.Segments {
+				fareBasisCode := seg.MarketingSegment.FareBasisCode
+
+				for _, leg := range seg.Legs {
+					dep := formatAPIAirportTime(
+						leg.TransportOrigin.Station.Code,
+						leg.TransportOrigin.ScheduledDepartureLocalDateTime,
+					)
+					arr := formatAPIAirportTime(
+						leg.TransportDestination.Station.Code,
+						leg.TransportDestination.ScheduledArrivalLocalDateTime,
+					)
+					status := strings.ReplaceAll(leg.Status, "_", " ")
+					dist := leg.DistanceMiles
+					if dist == 0 {
+						dist = trip.DistanceMiles
 					}
-					fareCode := t.FareBasisCode
-					if fareCode == "" {
-						fareCode = t.FareClass
+					fltNum := "DL" + leg.FlightNum
+
+					for paxIdx, pax := range res.Passengers {
+						paxName := formatName(pax.GivenNames, pax.Surname)
+						seat := "—"
+						cabin := ""
+
+						// Find this pax's seat and cabin for this segment/leg.
+						for _, pt := range pax.PassengerTrips {
+							if pt.TripID != trip.TripID {
+								continue
+							}
+							for _, ps := range pt.PassengerSegments {
+								if ps.SegmentID != seg.SegmentID {
+									continue
+								}
+								cabin = ps.BookedCabinClass.Code
+								if fareBasisCode != "" {
+									cabin = cabin + " (" + fareBasisCode + ")"
+								}
+								for _, pl := range ps.PassengerLegs {
+									if pl.LegID != leg.LegID {
+										continue
+									}
+									if len(pl.SeatAssignments) > 0 {
+										seat = pl.SeatAssignments[0].Seat.Number
+									}
+								}
+							}
+						}
+
+						if seat == "" {
+							seat = "—"
+						}
+
+						flights = append(flights, Flight{
+							FlightNumber:  fltNum,
+							Departure:     dep,
+							Arrival:       arr,
+							DepartureTime: parseAPITime(leg.TransportOrigin.ScheduledDepartureLocalDateTime),
+							Seat:          seat,
+							Cabin:         cabin,
+							Aircraft:      leg.TransportEquipment.Name,
+							Status:        status,
+							PaxIndex:      paxIdx,
+							NPax:          nPax,
+							PassengerName: paxName,
+							DistanceMiles: dist,
+						})
 					}
-					if fareCode != "" {
-						cabin = t.Cabin + " (" + fareCode + ")"
-					} else {
-						cabin = t.Cabin
-					}
-					if t.FirstName != "" || t.LastName != "" {
-						paxName = formatName(t.FirstName, t.LastName)
+
+					// No passengers in response — emit one row with fallback name.
+					if nPax == 0 {
+						flights = append(flights, Flight{
+							FlightNumber:  fltNum,
+							Departure:     dep,
+							Arrival:       arr,
+							DepartureTime: parseAPITime(leg.TransportOrigin.ScheduledDepartureLocalDateTime),
+							Seat:          "—",
+							Aircraft:      leg.TransportEquipment.Name,
+							Status:        status,
+							NPax:          1,
+							PassengerName: fallbackPassenger,
+							DistanceMiles: dist,
+						})
 					}
 				}
-				flights = append(flights, Flight{
-					FlightNumber:  seg.FlightNumber,
-					Departure:     dep,
-					Arrival:       arr,
-					DepartureTime: parseAPITime(seg.DepartureTime),
-					Seat:          seat,
-					Cabin:         cabin,
-					Aircraft:      seg.Aircraft,
-					Status:        seg.Status,
-					PaxIndex:      i,
-					NPax:          nPax,
-					PassengerName: paxName,
-					DistanceMiles: seg.DistanceMiles,
-				})
 			}
 		}
 	}
@@ -180,6 +273,7 @@ func parseAPITime(ts string) time.Time {
 	}
 	// Try common ISO-like formats Delta may return.
 	for _, layout := range []string{
+		"2006-01-02T15:04:05.0",
 		"2006-01-02T15:04:05",
 		"2006-01-02T15:04:05Z07:00",
 		"2006-01-02T15:04:05.000Z",

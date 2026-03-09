@@ -16,7 +16,9 @@ var (
 	iataRE   = regexp.MustCompile(`\(([A-Z]{3})\)`)
 	timeRE   = regexp.MustCompile(`\b(\d{1,2}:\d{2}\s*[AaPp][Mm])\b`)
 	dateRE   = regexp.MustCompile(`(?i)(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*,\s+([A-Za-z]{3}\s+\d{1,2})`)
-	fareRE   = regexp.MustCompile(`\(([A-Z]{1,3})\)\s*$`)
+	fareRE   = regexp.MustCompile(`\(([A-Z0-9/]{1,20})\)\s*$`)
+	// apiDTRE matches the format produced by formatAPIAirportTime: "25Jun 1125\n(SLC)"
+	apiDTRE  = regexp.MustCompile(`^(\d{2}[A-Za-z]{3})\s+(\d{4})`)
 )
 
 func extractFlights(page *rod.Page, fallbackName string) ([]Flight, error) {
@@ -252,7 +254,13 @@ func ParseIATA(raw string) string {
 }
 
 // ParseDT formats the raw dep/arr string to "DDMMM HHMM".
+// Handles both the DOM scraper format and the API format ("25Jun 1125\n(SLC)").
 func ParseDT(raw string) string {
+	// API format: "25Jun 1125\n(SLC)" — already in target shape, just uppercase it.
+	if m := apiDTRE.FindStringSubmatch(raw); m != nil {
+		return strings.ToUpper(m[1]) + " " + m[2]
+	}
+
 	timeM := timeRE.FindString(raw)
 	dateM := dateRE.FindStringSubmatch(raw)
 	if timeM == "" || dateM == nil {
@@ -284,43 +292,62 @@ func ParseDT(raw string) string {
 // ParseFare extracts the booking class from a cabin string like "Delta First Classic (Z)".
 func ParseFare(cabin string) string {
 	if m := fareRE.FindStringSubmatch(cabin); m != nil {
-		return m[1]
+		code := m[1]
+		if i := strings.Index(code, "/"); i >= 0 {
+			code = code[:i]
+		}
+		return code
 	}
 	return "—"
 }
 
 var acAbbrev = map[string]string{
-	"Airbus A220-100":   "A220-100",
-	"Airbus A220-300":   "A220-300",
-	"Airbus A319":       "A319",
-	"Airbus A320":       "A320",
-	"Airbus A321":       "A321",
-	"Boeing 717":        "B717",
-	"Boeing 737-800":    "B738",
-	"Boeing 737-900":    "B739",
-	"Boeing 757-200":    "B752",
-	"Boeing 757-300":    "B753",
-	"Boeing 767-300":    "B763",
-	"Boeing 767-300ER":  "B763",
-	"Boeing 767-400":    "B764",
-	"Boeing 777-200":    "B772",
-	"Boeing 777-200LR":  "B77L",
-	"Boeing 777-200ER":  "B772",
-	"Boeing 787-8":      "B788",
-	"Boeing 787-9":      "B789",
-	"Boeing 787-10":     "B78X",
-	"Embraer 170":       "E170",
-	"Embraer 175":       "E175",
-	"Embraer 190":       "E190",
-	"Airbus A330-900":   "A339",
-	"Airbus A350-900":   "A359",
-	"Airbus A350-1000":  "A35K",
+	"Airbus A220-100":                    "A220-100",
+	"Airbus A220-300":                    "A220-300",
+	"Airbus A319":                        "A319",
+	"Airbus A320":                        "A320",
+	"Airbus A321":                        "A321",
+	"Boeing 717":                         "B717",
+	"Boeing 737-800":                     "B738",
+	"Boeing 737-900":                     "B739",
+	"Boeing 757-200":                     "B752",
+	"Boeing 757-300":                     "B753",
+	"Boeing 767-300":                     "B763",
+	"Boeing 767-300ER":                   "B763",
+	"Boeing 767-400":                     "B764",
+	"Boeing 777-200":                     "B772",
+	"Boeing 777-200LR":                   "B77L",
+	"Boeing 777-200ER":                   "B772",
+	"Boeing 787-8":                       "B788",
+	"Boeing 787-9":                       "B789",
+	"Boeing 787-10":                      "B78X",
+	"Embraer 170":                        "E170",
+	"Embraer 175":                        "E175",
+	"Embraer 175 (Enhanced Winglets)":    "E175",
+	"Embraer 175 Enhanced Winglets":      "E175",
+	"Embraer 190":                        "E190",
+	"Airbus A330-900":                    "A339",
+	"Airbus A350-900":                    "A359",
+	"Airbus A350-1000":                   "A35K",
 }
 
 // AbbrevAC shortens aircraft type strings.
 func AbbrevAC(ac string) string {
 	if short, ok := acAbbrev[ac]; ok {
 		return short
+	}
+	// Strip parenthetical suffixes like " (Enhanced Winglets)" and retry.
+	if i := strings.Index(ac, " ("); i >= 0 {
+		base := strings.TrimSpace(ac[:i])
+		if short, ok := acAbbrev[base]; ok {
+			return short
+		}
+	}
+	// Strip non-parenthetical suffixes by matching known keys as prefixes.
+	for key, short := range acAbbrev {
+		if strings.HasPrefix(ac, key+" ") {
+			return short
+		}
 	}
 	return ac
 }

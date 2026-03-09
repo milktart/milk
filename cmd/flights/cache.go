@@ -19,7 +19,7 @@ type CacheEntry struct {
 	FetchedAt      time.Time `json:"fetched_at"`
 	Flights        []Flight  `json:"flights"`
 	RawError       string    `json:"raw_error,omitempty"`
-	AuthToken      string    `json:"auth_token,omitempty"`
+	SessionHeaders map[string]string `json:"session_headers,omitempty"`
 }
 
 func cacheFile() string {
