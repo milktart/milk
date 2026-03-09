@@ -1,4 +1,4 @@
-package tracker
+package flights
 
 import (
 	"encoding/json"

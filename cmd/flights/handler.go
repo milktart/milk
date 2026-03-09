@@ -1,4 +1,4 @@
-package tracker
+package flights
 
 import (
 	"flag"
@@ -6,19 +6,19 @@ import (
 	"sync"
 )
 
-// Handler processes the tracker subcommand.
+// Handler processes the flights subcommand.
 type Handler struct {
 	FlagSet *flag.FlagSet
 }
 
-// NewHandler creates a Handler for the tracker command.
+// NewHandler creates a Handler for the flights command.
 func NewHandler() *Handler {
 	return &Handler{
-		FlagSet: flag.NewFlagSet("tracker", flag.ExitOnError),
+		FlagSet: flag.NewFlagSet("flights", flag.ExitOnError),
 	}
 }
 
-// Execute runs the tracker command with the provided arguments.
+// Execute runs the flights command with the provided arguments.
 func (h *Handler) Execute(args []string) error {
 	addFlag := h.FlagSet.Bool("add", false, "Add a booking: --add PNR FIRSTNAME LASTNAME")
 	refreshFlag := h.FlagSet.Bool("refresh", false, "Force re-fetch all bookings (ignore cache)")
@@ -26,18 +26,18 @@ func (h *Handler) Execute(args []string) error {
 	visibleFlag := h.FlagSet.Bool("visible", false, "Run browser in visible (non-headless) mode")
 
 	h.FlagSet.Usage = func() {
-		fmt.Fprintf(h.FlagSet.Output(), "Usage: milk tracker [options]\n\n")
+		fmt.Fprintf(h.FlagSet.Output(), "Usage: milk flights [options]\n\n")
 		fmt.Println("Fetch and display your Delta flight bookings from delta.com.\n")
 		fmt.Println("Booking data is stored in bookings.json next to the binary.")
 		fmt.Println("Results are cached for 6 hours (always re-fetched within 24h of departure).\n")
 		fmt.Println("Options:")
 		h.FlagSet.PrintDefaults()
 		fmt.Println("\nExamples:")
-		fmt.Println("  milk tracker")
-		fmt.Println("  milk tracker --refresh")
-		fmt.Println("  milk tracker --show-cached")
-		fmt.Println("  milk tracker --add ABC123 Jane Doe")
-		fmt.Println("  milk tracker --visible")
+		fmt.Println("  milk flights")
+		fmt.Println("  milk flights --refresh")
+		fmt.Println("  milk flights --show-cached")
+		fmt.Println("  milk flights --add ABC123 Jane Doe")
+		fmt.Println("  milk flights --visible")
 	}
 
 	if err := h.FlagSet.Parse(args); err != nil {
@@ -75,7 +75,7 @@ func (h *Handler) Execute(args []string) error {
 	}
 	if len(bookings) == 0 {
 		fmt.Println("No bookings found in bookings.json.")
-		fmt.Println("Add one with: milk tracker --add CONFIRMATION FIRSTNAME LASTNAME")
+		fmt.Println("Add one with: milk flights --add CONFIRMATION FIRSTNAME LASTNAME")
 		return nil
 	}
 
