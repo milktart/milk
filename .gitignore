@@ -5,3 +5,7 @@
 
 # Ignore internal build docs
 BUILD.md
+
+# Tracker personal data
+bookings.json
+cache.json
