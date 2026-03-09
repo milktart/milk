@@ -1,4 +1,4 @@
-package flights
+package miles
 
 import (
 	"flag"
@@ -13,7 +13,7 @@ type Handler struct {
 // NewHandler creates a new Handler for the distance command
 func NewHandler() *Handler {
 	return &Handler{
-		FlagSet: flag.NewFlagSet("flights", flag.ExitOnError),
+		FlagSet: flag.NewFlagSet("miles", flag.ExitOnError),
 	}
 }
 
@@ -24,7 +24,7 @@ func (h *Handler) Execute(args []string) error {
 	loyaltyFlag := h.FlagSet.String("l", "None", "Loyalty status for bonus miles (DM, PM, GM, SM, or None)")
 
 	h.FlagSet.Usage = func() {
-		fmt.Fprintf(h.FlagSet.Output(), "Usage: milk flights [options] <airport pairs>\n\n")
+		fmt.Fprintf(h.FlagSet.Output(), "Usage: milk miles [options] <airport pairs>\n\n")
 		fmt.Println("Calculate flight distances and airline miles earnings.\n")
 		fmt.Println("Airport pairs are specified as three-letter airport codes.")
 		fmt.Println("Optionally prefix each pair with airline.fareclass (e.g., KL.Z for KLM Business).\n")
@@ -36,10 +36,10 @@ func (h *Handler) Execute(args []string) error {
 		fmt.Println("  GM - Gold Member (0.6x bonus)")
 		fmt.Println("  SM - Silver Member (0.4x bonus)\n")
 		fmt.Println("Examples:")
-		fmt.Println("  milk flights ATL LAX")
-		fmt.Println("  milk flights -l DM ATL AA.Y LAX DL.J LAS")
-		fmt.Println("  milk flights --roundtrip -l PM ORD LAX")
-		fmt.Println("  milk flights ATL LAX XX LAX ATL			# Use XX to reset airport for new routes")
+		fmt.Println("  milk miles ATL LAX")
+		fmt.Println("  milk miles -l DM ATL AA.Y LAX DL.J LAS")
+		fmt.Println("  milk miles --roundtrip -l PM ORD LAX")
+		fmt.Println("  milk miles ATL LAX XX LAX ATL			# Use XX to reset airport for new routes")
 	}
 
 	if err := h.FlagSet.Parse(args); err != nil {

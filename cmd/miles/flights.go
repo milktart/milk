@@ -1,4 +1,4 @@
-package flights
+package miles
 
 import (
 	"encoding/json"

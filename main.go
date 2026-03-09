@@ -5,7 +5,7 @@ import (
   "os"
   "strings"
 
-  "github.com/milktart/milk/cmd/flights"
+  "github.com/milktart/milk/cmd/miles"
   "github.com/milktart/milk/cmd/numbers"
   "github.com/milktart/milk/cmd/tracker"
   "github.com/milktart/milk/pkg/config"
@@ -23,15 +23,15 @@ func printMainMenu() {
   fmt.Printf("  %s --help\n\n", TOOLNAME)
   fmt.Println("Commands:")
   fmt.Println("  numbers    Search for special phone numbers by area code and pattern")
-  fmt.Println("  flights    Calculate flight distances between locations")
+  fmt.Println("  miles      Calculate flight distances between locations")
   fmt.Println("  tracker    Fetch and display Delta flight bookings")
   fmt.Println()
   fmt.Printf("Use \"%s <command> --help\" for more information about a command.\n\n", TOOLNAME)
   fmt.Println("Examples:")
   fmt.Printf("  %s numbers -c 212 415 808 -r Canada -p VIP\n", TOOLNAME)
   fmt.Printf("  %s numbers --Canada\n", TOOLNAME)
-  fmt.Printf("  %s flights -R SEA TPE\n", TOOLNAME)
-  fmt.Printf("  %s flights AUS KL.Z AMS KL.Z HEL XX PRG KL.N AMS KL.Z AUS\n", TOOLNAME)
+  fmt.Printf("  %s miles -R SEA TPE\n", TOOLNAME)
+  fmt.Printf("  %s miles AUS KL.Z AMS KL.Z HEL XX PRG KL.N AMS KL.Z AUS\n", TOOLNAME)
 }
 
 
@@ -63,8 +63,8 @@ func main() {
         os.Exit(1)
       }
 
-    case "flights":
-      handler := flights.NewHandler()
+    case "miles":
+      handler := miles.NewHandler()
       if err := handler.Execute(os.Args[2:]); err != nil {
         fmt.Fprintf(os.Stderr, "Error: %v\n", err)
         os.Exit(1)
