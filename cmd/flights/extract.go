@@ -251,7 +251,7 @@ func ParseIATA(raw string) string {
 	return "—"
 }
 
-// ParseDT formats the raw dep/arr string to "HH:MM DDMMM".
+// ParseDT formats the raw dep/arr string to "DDMMM HHMM".
 func ParseDT(raw string) string {
 	timeM := timeRE.FindString(raw)
 	dateM := dateRE.FindStringSubmatch(raw)
@@ -267,7 +267,7 @@ func ParseDT(raw string) string {
 		}
 		t = t2
 	}
-	hhmm := t.Format("15:04")
+	hhmm := t.Format("1504")
 
 	dateParts := strings.Fields(strings.ToUpper(dateM[1]))
 	if len(dateParts) != 2 {
@@ -278,7 +278,7 @@ func ParseDT(raw string) string {
 	if len(day) == 1 {
 		day = "0" + day
 	}
-	return hhmm + " " + day + mon
+	return day + mon + " " + hhmm
 }
 
 // ParseFare extracts the booking class from a cabin string like "Delta First Classic (Z)".

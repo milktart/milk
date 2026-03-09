@@ -3,21 +3,24 @@ package flights
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
+	"github.com/go-rod/rod/lib/proto"
 	"github.com/go-rod/stealth"
 )
 
 const maxConcurrent = 4
 
 // FetchBooking opens a headless browser, navigates Delta's My Trips form,
-// submits the PNR + name, and returns a CacheEntry with extracted flight data.
+// intercepts the auth token from the browser's own API call, then fetches
+// data directly from the Delta API using that token.
 func FetchBooking(b Booking, headless bool) *CacheEntry {
 	entry := &CacheEntry{
 		PNR:       b.PNR,
-		Passenger: b.First + " " + b.Last,
+		Passenger: formatName(b.First, b.Last),
 		FetchedAt: time.Now().UTC(),
 	}
 
@@ -25,9 +28,6 @@ func FetchBooking(b Booking, headless bool) *CacheEntry {
 		Headless(headless).
 		Set("disable-blink-features", "AutomationControlled").
 		Set("no-sandbox", "")
-	if !headless {
-		l = l.Headless(false)
-	}
 	u := l.MustLaunch()
 
 	browser := rod.New().ControlURL(u).MustConnect()
@@ -39,6 +39,22 @@ func FetchBooking(b Booking, headless bool) *CacheEntry {
 		"Accept-Language", "en-US,en;q=0.9",
 		"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
 	)
+
+	// Intercept all requests to the mytrips API to capture the bearer token.
+	var authToken string
+	var authMu sync.Mutex
+	router := page.HijackRequests()
+	router.MustAdd("*mytrips-api.delta.com*", func(ctx *rod.Hijack) {
+		h := ctx.Request.Header("Authorization")
+		fmt.Printf("  [hijack] %s auth=%q\n", ctx.Request.URL().String(), h[:min(len(h), 40)])
+		if strings.HasPrefix(h, "Bearer ") {
+			authMu.Lock()
+			authToken = h
+			authMu.Unlock()
+		}
+		ctx.ContinueRequest(&proto.FetchContinueRequest{})
+	})
+	go router.Run()
 
 	// 1. Load homepage
 	if err := rod.Try(func() {
@@ -100,39 +116,38 @@ func FetchBooking(b Booking, headless bool) *CacheEntry {
 		return entry
 	}
 
-	// 7. Wait for trip-details URL
-	deadline := time.Now().Add(25 * time.Second)
+	// 7. Wait for the auth token to be intercepted (browser makes its own API call
+	// once the trip-details page loads, which gives us the bearer token).
+	deadline := time.Now().Add(30 * time.Second)
 	for time.Now().Before(deadline) {
-		if strings.Contains(page.MustInfo().URL, "trip-details") {
+		authMu.Lock()
+		tok := authToken
+		authMu.Unlock()
+		if tok != "" {
 			break
 		}
-		time.Sleep(400 * time.Millisecond)
+		time.Sleep(300 * time.Millisecond)
 	}
 
-	// 8. Check for CAPTCHA
-	bodyText := page.MustElement("body").MustText()
-	if strings.Contains(strings.ToLower(bodyText), "captcha") ||
-		strings.Contains(strings.ToLower(bodyText), "are you a robot") {
-		entry.RawError = "CAPTCHA detected — run with --visible to solve manually"
+	authMu.Lock()
+	tok := authToken
+	authMu.Unlock()
+
+	if tok == "" {
+		entry.RawError = "auth token not captured — browser did not call the API within 30s"
 		return entry
 	}
 
-	// 9. Wait for flight cards to render (Angular SPA skeleton)
-	deadline = time.Now().Add(30 * time.Second)
-	for time.Now().Before(deadline) {
-		cards, _ := page.Elements(".td-flight-card")
-		if len(cards) > 0 {
-			break
+	// 8. Call the API directly with the captured token.
+	entry.AuthToken = tok
+	apiEntry := FetchBookingFromAPI(b, tok)
+	if apiEntry.RawError != "" || len(apiEntry.Flights) == 0 {
+		if apiEntry.RawError != "" {
+			entry.RawError = fmt.Sprintf("API: %s", apiEntry.RawError)
+		} else {
+			entry.RawError = "API returned no flights"
 		}
-		time.Sleep(500 * time.Millisecond)
-	}
-
-	// 10. Extract
-	flights, err := extractFlights(page, b.First+" "+b.Last)
-	if err != nil {
-		entry.RawError = fmt.Sprintf("extraction: %v", err)
 		return entry
 	}
-	entry.Flights = flights
-	return entry
+	return apiEntry
 }

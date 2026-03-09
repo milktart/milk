@@ -14,16 +14,16 @@ const (
 
 // CacheEntry is the persisted result for one PNR.
 type CacheEntry struct {
-	PNR       string    `json:"pnr"`
-	Passenger string    `json:"passenger"`
-	FetchedAt time.Time `json:"fetched_at"`
-	Flights   []Flight  `json:"flights"`
-	RawError  string    `json:"raw_error,omitempty"`
+	PNR            string    `json:"pnr"`
+	Passenger      string    `json:"passenger"`
+	FetchedAt      time.Time `json:"fetched_at"`
+	Flights        []Flight  `json:"flights"`
+	RawError       string    `json:"raw_error,omitempty"`
+	AuthToken      string    `json:"auth_token,omitempty"`
 }
 
 func cacheFile() string {
-	exe, _ := os.Executable()
-	return filepath.Join(filepath.Dir(exe), "cache.json")
+	return filepath.Join(flightsConfigDir(), "cache.json")
 }
 
 // LoadCache reads cache.json. Returns an empty map on any error.
@@ -39,15 +39,19 @@ func LoadCache() map[string]*CacheEntry {
 
 // SaveCache writes the cache map to disk atomically.
 func SaveCache(cache map[string]*CacheEntry) error {
+	path := cacheFile()
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return err
+	}
 	data, err := json.MarshalIndent(cache, "", "  ")
 	if err != nil {
 		return err
 	}
-	tmp := cacheFile() + ".tmp"
+	tmp := path + ".tmp"
 	if err := os.WriteFile(tmp, data, 0644); err != nil {
 		return err
 	}
-	return os.Rename(tmp, cacheFile())
+	return os.Rename(tmp, path)
 }
 
 // IsCacheFresh returns true if the entry is recent enough to skip a re-fetch.
@@ -84,4 +88,5 @@ type Flight struct {
 	PaxIndex      int       `json:"pax_index"`
 	NPax          int       `json:"n_pax"`
 	PassengerName string    `json:"passenger_name"`
+	DistanceMiles int       `json:"distance_miles,omitempty"`
 }

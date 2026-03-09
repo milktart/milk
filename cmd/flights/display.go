@@ -39,6 +39,7 @@ type displayRow struct {
 	cls     string
 	ac      string
 	status  string
+	dist    string
 }
 
 // DisplayAll renders a unified, departure-sorted table across all cache entries.
@@ -93,6 +94,10 @@ func DisplayAll(entries []*CacheEntry) {
 				status = "—"
 			}
 
+			dist := ""
+			if f.DistanceMiles > 0 {
+				dist = fmt.Sprintf("%d", f.DistanceMiles)
+			}
 			rows = append(rows, displayRow{
 				sortKey: sortKey,
 				pnr:     e.PNR,
@@ -106,6 +111,7 @@ func DisplayAll(entries []*CacheEntry) {
 				cls:     ParseFare(f.Cabin),
 				ac:      AbbrevAC(f.Aircraft),
 				status:  status,
+				dist:    dist,
 			})
 		}
 	}
@@ -135,6 +141,7 @@ func DisplayAll(entries []*CacheEntry) {
 		{"CLS", 5},
 		{"A/C", 9},
 		{"STATUS", 15},
+		{"MI", 6},
 	}
 
 	termW, _, err := term.GetSize(int(os.Stdout.Fd()))
@@ -192,9 +199,10 @@ func DisplayAll(entries []*CacheEntry) {
 
 		clsStr := r.cls
 		acStr := r.ac
+		distStr := r.dist
 		if same {
-			clsStr = ""
 			acStr = ""
+			distStr = ""
 		}
 
 		fmt.Printf(" %s%-*s%s", cyan, cols[0].width, pnrStr, reset)
@@ -208,6 +216,7 @@ func DisplayAll(entries []*CacheEntry) {
 		fmt.Printf(" %-*s", cols[8].width, clsStr)
 		fmt.Printf(" %-*s", cols[9].width, acStr)
 		fmt.Printf(" %s%-*s%s", sc, cols[10].width, statusStr, sr)
+		fmt.Printf(" %-*s", cols[11].width, distStr)
 		fmt.Println()
 
 		prevKey = key
@@ -227,13 +236,13 @@ func parseSortKey(depDT string) time.Time {
 	if depDT == "—" || depDT == "" {
 		return time.Time{}
 	}
-	// Format: "HH:MM DDMMM", e.g. "06:03 10MAR"
+	// Format: "DDMMM HHMM", e.g. "10MAR 0603"
 	parts := strings.Fields(depDT)
 	if len(parts) != 2 {
 		return time.Time{}
 	}
 	s := fmt.Sprintf("%s %s %d", parts[0], parts[1], time.Now().Year())
-	t, err := time.Parse("15:04 02Jan 2006", s)
+	t, err := time.Parse("02Jan 1504 2006", s)
 	if err != nil {
 		return time.Time{}
 	}
