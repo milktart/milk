@@ -23,8 +23,11 @@ type Booking struct {
 }
 
 func flightsConfigDir() string {
-	exe, _ := os.Executable()
-	return filepath.Join(filepath.Dir(exe), "config", "flights")
+	if dir, err := os.UserConfigDir(); err == nil {
+		return filepath.Join(dir, "milk", "flights")
+	}
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, ".config", "milk", "flights")
 }
 
 func bookingsFile() string {
