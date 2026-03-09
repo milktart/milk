@@ -7,12 +7,13 @@ import (
 
   "github.com/milktart/milk/cmd/flights"
   "github.com/milktart/milk/cmd/numbers"
+  "github.com/milktart/milk/cmd/tracker"
   "github.com/milktart/milk/pkg/config"
 )
 
 const (
   TOOLNAME = "milk"
-  VERSION  = "0.0.13"
+  VERSION  = "0.0.14"
 )
 
 func printMainMenu() {
@@ -23,6 +24,7 @@ func printMainMenu() {
   fmt.Println("Commands:")
   fmt.Println("  numbers    Search for special phone numbers by area code and pattern")
   fmt.Println("  flights    Calculate flight distances between locations")
+  fmt.Println("  tracker    Fetch and display Delta flight bookings")
   fmt.Println()
   fmt.Printf("Use \"%s <command> --help\" for more information about a command.\n\n", TOOLNAME)
   fmt.Println("Examples:")
@@ -63,6 +65,13 @@ func main() {
 
     case "flights":
       handler := flights.NewHandler()
+      if err := handler.Execute(os.Args[2:]); err != nil {
+        fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+        os.Exit(1)
+      }
+
+    case "tracker":
+      handler := tracker.NewHandler()
       if err := handler.Execute(os.Args[2:]); err != nil {
         fmt.Fprintf(os.Stderr, "Error: %v\n", err)
         os.Exit(1)
