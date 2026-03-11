@@ -207,35 +207,38 @@ func captureLoyaltySession(username, password string, headless, automated bool) 
 		// Delta's login page shows #userId (username) and #password on the same page.
 		// The Angular form only renders after the PingFederate IS_USER_REMEMBERED flow
 		// completes — wait up to 20s for #userId to appear.
-		// Step 1: Click #userId and type username digit-by-digit via keyboard events
-		// (required for Angular reactive form validation to register the value).
 		if err := rod.Try(func() {
 			page.Timeout(20 * time.Second).MustElement("#userId").MustClick()
 		}); err != nil {
 			return nil, fmt.Errorf("username field not found: %v", err)
 		}
-		time.Sleep(300 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
+
+		// Type username digit-by-digit via keyboard events (required for Angular
+		// reactive form validation to register the value).
 		for _, ch := range username {
 			if k, ok := loyaltyDigitKeys[ch]; ok {
 				page.Keyboard.MustType(k)
 			}
-			time.Sleep(50 * time.Millisecond)
+			time.Sleep(80 * time.Millisecond)
 		}
-		time.Sleep(300 * time.Millisecond)
+		time.Sleep(600 * time.Millisecond)
 
-		// Step 2: Click the password field and fill it using InsertText (preserves case).
+		// Click the password field and type it character-by-character via
+		// JavaScript input events so Angular registers the value correctly.
 		if err := rod.Try(func() {
 			page.Timeout(5 * time.Second).MustElement("#password").MustClick()
 		}); err != nil {
 			return nil, fmt.Errorf("password field not found — re-run with --visible to log in manually: %v", err)
 		}
-		time.Sleep(200 * time.Millisecond)
-		if err := page.InsertText(password); err != nil {
-			return nil, fmt.Errorf("insert password: %v", err)
+		time.Sleep(500 * time.Millisecond)
+		for _, ch := range password {
+			page.MustElement("#password").MustInput(string(ch))
+			time.Sleep(80 * time.Millisecond)
 		}
-		time.Sleep(300 * time.Millisecond)
+		time.Sleep(600 * time.Millisecond)
 
-		// Step 3: Click the Login button explicitly.
+		// Click the Login button explicitly.
 		submitted := false
 		for _, sel := range []string{`.loginModal-button`, `button[type="submit"]`, `#btn-login`} {
 			if err := rod.Try(func() {
@@ -249,13 +252,13 @@ func captureLoyaltySession(username, password string, headless, automated bool) 
 			// Fall back to Enter key
 			page.Keyboard.MustType(input.Enter)
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(3 * time.Second)
 
-		// Wait for post-login redirect (up to 15s).
+		// Wait for post-login redirect (up to 20s).
 		_ = rod.Try(func() {
-			page.Timeout(15 * time.Second).MustWaitNavigation()
+			page.Timeout(20 * time.Second).MustWaitNavigation()
 		})
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(1 * time.Second)
 
 		// If still on the login page, Akamai blocked the automated submission.
 		if info, _ := page.Info(); info != nil && strings.Contains(info.URL, "/skymiles/login") {
