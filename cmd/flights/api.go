@@ -3,7 +3,6 @@ package flights
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,27 +11,6 @@ import (
 )
 
 const apiURL = "https://mytrips-api.delta.com/v1/mytrips/travelreservations"
-const loyaltyAPIURL = "https://loyalty2-api.delta.com/loyaltyProgram/v2/statusTracker/futureActivities"
-
-// ErrLoyaltyUnauthorized is returned when the loyalty API returns 401 or 403.
-var ErrLoyaltyUnauthorized = errors.New("loyalty API: unauthorized")
-
-type loyaltyRequest struct {
-	CarrierCode             string `json:"carrierCode"`
-	LoyaltyMemberID         string `json:"loyaltyMemberId"`
-	TrackingToTierLevelCode string `json:"trackingToTierLevelCode"`
-}
-
-// LoyaltyActivity is one entry from the loyalty futureActivities response.
-type LoyaltyActivity struct {
-	ConfirmationNumber string `json:"confirmationNumber"`
-	FirstName          string `json:"firstName,omitempty"`
-	LastName           string `json:"lastName,omitempty"`
-}
-
-type loyaltyResponse struct {
-	FutureActivities []LoyaltyActivity `json:"futureActivities"`
-}
 
 type apiRequest struct {
 	Using           string `json:"using"`
@@ -41,8 +19,7 @@ type apiRequest struct {
 	Surname         string `json:"surname"`
 }
 
-
-// FetchBookingFromAPI fetches booking data directly from the Delta API using a
+// FetchBookingFromAPI fetches booking data directly from the Delta API using
 // session headers captured from a prior browser session.
 // Returns a new CacheEntry; on error the entry will have RawError set.
 func FetchBookingFromAPI(b Booking, sessionHeaders map[string]string) *CacheEntry {
@@ -103,7 +80,6 @@ func FetchBookingFromAPI(b Booking, sessionHeaders map[string]string) *CacheEntr
 		return entry
 	}
 
-
 	flights, err := parseAPIResponse(body, entry.Passenger)
 	if err != nil {
 		entry.RawError = fmt.Sprintf("api parse: %v", err)
@@ -114,9 +90,6 @@ func FetchBookingFromAPI(b Booking, sessionHeaders map[string]string) *CacheEntr
 }
 
 // parseAPIResponse maps the Delta API JSON response into Flight slices.
-// The response structure is:
-//   travelReservations[].trips[].segments[].legs[] — flight/leg data
-//   travelReservations[].passengers[]             — pax names + per-segment seat/cabin
 func parseAPIResponse(body []byte, fallbackPassenger string) ([]Flight, error) {
 	var raw struct {
 		TravelReservations []struct {
@@ -213,7 +186,6 @@ func parseAPIResponse(body []byte, fallbackPassenger string) ([]Flight, error) {
 						seat := "—"
 						cabin := ""
 
-						// Find this pax's seat and cabin for this segment/leg.
 						for _, pt := range pax.PassengerTrips {
 							if pt.TripID != trip.TripID {
 								continue
@@ -279,82 +251,6 @@ func parseAPIResponse(body []byte, fallbackPassenger string) ([]Flight, error) {
 	return flights, nil
 }
 
-// FetchFutureActivities calls the Delta loyalty API to get upcoming flight activities
-// for a SkyMiles member. sessionHeaders must include an "Authorization" Bearer JWT.
-// Returns ErrLoyaltyUnauthorized on 401/403. Returns nil, nil on unparseable 200.
-func FetchFutureActivities(memberID string, sessionHeaders map[string]string) ([]LoyaltyActivity, error) {
-	payload, err := json.Marshal(loyaltyRequest{
-		CarrierCode:             "DL",
-		LoyaltyMemberID:         memberID,
-		TrackingToTierLevelCode: "PM",
-	})
-	if err != nil {
-		return nil, fmt.Errorf("loyalty marshal: %w", err)
-	}
-
-	req, err := http.NewRequest("POST", loyaltyAPIURL, bytes.NewReader(payload))
-	if err != nil {
-		return nil, fmt.Errorf("loyalty request: %w", err)
-	}
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	req.Header.Set("Accept", "application/json, text/plain, */*")
-	req.Header.Set("Origin", "https://www.delta.com")
-	req.Header.Set("Referer", "https://www.delta.com/")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
-	if auth, ok := sessionHeaders["Authorization"]; ok && auth != "" {
-		req.Header.Set("Authorization", auth)
-	}
-	for _, k := range sessionHeaderKeys {
-		if v, ok := sessionHeaders[k]; ok && v != "" {
-			if k == "Cookie" {
-				v = cookieWithoutBmSs(v)
-			}
-			req.Header.Set(k, v)
-		}
-	}
-
-	client := &http.Client{Timeout: 30 * time.Second}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("loyalty call: %w", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("loyalty read: %w", err)
-	}
-
-	if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
-		return nil, ErrLoyaltyUnauthorized
-	}
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		return nil, fmt.Errorf("loyalty status %d: %s", resp.StatusCode, truncate(string(body), 120))
-	}
-
-	var out loyaltyResponse
-	if err := json.Unmarshal(body, &out); err != nil {
-		fmt.Printf("\033[2mWarning: loyalty API response unparseable: %s\033[0m\n", truncate(string(body), 120))
-		return nil, nil
-	}
-	return out.FutureActivities, nil
-}
-
-// ExtractPNRsFromActivities returns deduplicated confirmation numbers from activities.
-func ExtractPNRsFromActivities(activities []LoyaltyActivity) []string {
-	seen := make(map[string]bool)
-	var out []string
-	for _, a := range activities {
-		pnr := strings.ToUpper(strings.TrimSpace(a.ConfirmationNumber))
-		if pnr != "" && !seen[pnr] {
-			seen[pnr] = true
-			out = append(out, pnr)
-		}
-	}
-	return out
-}
-
 // formatAPIAirportTime builds the same "HH:MM DDMMM\n(XXX)" style string
 // the scraper produces, so the existing display/parse code works unchanged.
 func formatAPIAirportTime(iata, ts string) string {
@@ -369,7 +265,6 @@ func parseAPITime(ts string) time.Time {
 	if ts == "" {
 		return time.Time{}
 	}
-	// Try common ISO-like formats Delta may return.
 	for _, layout := range []string{
 		"2006-01-02T15:04:05.0",
 		"2006-01-02T15:04:05",

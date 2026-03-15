@@ -1,14 +1,12 @@
 package flights
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 	"sync"
-	"time"
 )
 
 // ensureDisplay re-execs the current process under xvfb-run if $DISPLAY is
@@ -61,17 +59,17 @@ func (h *Handler) Execute(args []string) error {
 	removeFlag := h.FlagSet.Bool("remove", false, "Remove a booking by PNR: --remove PNR")
 	listFlag := h.FlagSet.Bool("list", false, "List all saved bookings grouped by passenger")
 	pullFlag := h.FlagSet.Bool("pull", false, "Fetch a PNR without saving: --pull PNR LASTNAME/FIRSTNAME")
-	refreshFlag := h.FlagSet.Bool("refresh", false, "Force re-fetch bookings (ignore cache); optionally pass a PNR as the next argument to refresh only that booking")
+	refreshFlag := h.FlagSet.Bool("refresh", false, "Force re-fetch bookings (ignore cache); optionally pass a PNR to refresh only that booking")
 	cachedFlag := h.FlagSet.Bool("show-cached", false, "Display cached data only, do not hit delta.com")
 	visibleFlag := h.FlagSet.Bool("visible", false, "Run browser in visible (non-headless) mode")
-	setAccountFlag := h.FlagSet.Bool("set-account", false, "Set account credentials: --set-account LASTNAME/FIRSTNAME PASSWORD MEMBERID")
-	noLoyaltyFlag := h.FlagSet.Bool("no-loyalty", false, "Skip automatic loyalty PNR discovery for this run")
 
 	h.FlagSet.Usage = func() {
 		fmt.Fprintf(h.FlagSet.Output(), "Usage: milk flights [options]\n\n")
-		fmt.Println("Fetch and display your Delta flight bookings from delta.com.\n")
-		fmt.Println("Booking data is stored in bookings.json next to the binary.")
-		fmt.Println("Results are cached for 6 hours (always re-fetched within 24h of departure).\n")
+		fmt.Println("Fetch and display Delta flight bookings from delta.com.")
+		fmt.Println()
+		fmt.Println("Booking data is stored in bookings.json in ~/.config/milk/flights/.")
+		fmt.Println("Results are cached for 6 hours (always re-fetched within 24h of departure).")
+		fmt.Println()
 		fmt.Println("Options:")
 		h.FlagSet.PrintDefaults()
 		fmt.Println("\nExamples:")
@@ -84,8 +82,6 @@ func (h *Handler) Execute(args []string) error {
 		fmt.Println("  milk flights --pull Z0Y3X5 DOE/ALICEJANE")
 		fmt.Println("  milk flights --remove Z0Y3X5")
 		fmt.Println("  milk flights --visible")
-		fmt.Println("  milk flights --set-account DOE/JANEALICE mypassword 9158068438")
-		fmt.Println("  milk flights --no-loyalty")
 	}
 
 	if err := h.FlagSet.Parse(args); err != nil {
@@ -109,7 +105,7 @@ func (h *Handler) Execute(args []string) error {
 		if pnr == "" || last == "" || first == "" {
 			return fmt.Errorf("--add requires non-empty PNR, last name, and first name")
 		}
-		return AddBooking(pnr, first, last, "manual")
+		return AddBooking(pnr, first, last)
 	}
 
 	// --remove PNR
@@ -130,28 +126,7 @@ func (h *Handler) Execute(args []string) error {
 		return ListBookings()
 	}
 
-	// --set-account LASTNAME/FIRSTNAME PASSWORD MEMBERID
-	if *setAccountFlag {
-		rest := h.FlagSet.Args()
-		if len(rest) < 3 {
-			return fmt.Errorf("--set-account requires three arguments: LASTNAME/FIRSTNAME PASSWORD MEMBERID")
-		}
-		name := rest[0]
-		slash := strings.Index(name, "/")
-		if slash < 0 {
-			return fmt.Errorf("--set-account name must be in LASTNAME/FIRSTNAME format")
-		}
-		last := strings.TrimSpace(name[:slash])
-		first := strings.TrimSpace(name[slash+1:])
-		password := strings.TrimSpace(rest[1])
-		memberID := strings.TrimSpace(rest[2])
-		if last == "" || first == "" {
-			return fmt.Errorf("--set-account requires non-empty last name and first name")
-		}
-		return SetAccountCredentials(last, first, password, memberID)
-	}
-
-	// --pull PNR LASTNAME/FIRSTNAME: one-off fetch, no cache or bookings written
+	// --pull PNR LASTNAME/FIRSTNAME: one-off fetch, not saved to bookings or cache
 	if *pullFlag {
 		rest := h.FlagSet.Args()
 		if len(rest) < 2 {
@@ -168,8 +143,9 @@ func (h *Handler) Execute(args []string) error {
 		if pnr == "" || last == "" || first == "" {
 			return fmt.Errorf("--pull requires non-empty PNR, last name, and first name")
 		}
+		b := Booking{PNR: pnr, First: first, Last: last}
 		fmt.Printf("Fetching %s (%s)…\n", pnr, formatName(first, last))
-		entry := FetchBooking(Booking{PNR: pnr, First: first, Last: last}, !*visibleFlag)
+		entry := fetchWithBrowser(b, !*visibleFlag)
 		DisplayAll([]*CacheEntry{entry})
 		return nil
 	}
@@ -195,42 +171,13 @@ func (h *Handler) Execute(args []string) error {
 		return fmt.Errorf("loading bookings: %w", err)
 	}
 
-	cache := LoadCache()
-
-	// Loyalty PNR discovery — run before fetching so new PNRs are included.
-	if !*noLoyaltyFlag {
-		passengers, err := LoadPassengers()
-		if err != nil {
-			fmt.Printf("\033[2mWarning: could not load passengers for loyalty discovery: %v\033[0m\n", err)
-		} else {
-			var accounts []passengerEntry
-			for _, p := range passengers {
-				if p.MemberID != "" {
-					accounts = append(accounts, p)
-				}
-			}
-			if len(accounts) > 0 {
-				newPNRs := discoverLoyaltyPNRsForAll(accounts, cache, !*visibleFlag)
-				if newPNRs > 0 {
-					// Reload bookings to include newly merged PNRs.
-					bookings, err = LoadBookings()
-					if err != nil {
-						return fmt.Errorf("reloading bookings after loyalty discovery: %w", err)
-					}
-				}
-				// Save cache with any updated loyalty sessions.
-				if err := SaveCache(cache); err != nil {
-					fmt.Printf("\033[2mWarning: could not save cache after loyalty discovery: %v\033[0m\n", err)
-				}
-			}
-		}
-	}
-
 	if len(bookings) == 0 {
 		fmt.Println("No bookings found in bookings.json.")
-		fmt.Println("Add one with: milk flights --add CONFIRMATION FIRSTNAME LASTNAME")
+		fmt.Println("Add one with: milk flights --add PNR LASTNAME/FIRSTNAME")
 		return nil
 	}
+
+	cache := LoadCache()
 
 	var toFetch []Booking
 	results := make(map[string]*CacheEntry, len(bookings))
@@ -241,19 +188,13 @@ func (h *Handler) Execute(args []string) error {
 	}
 
 	for _, b := range bookings {
-		// Skip loyalty-discovered PNRs that have no passenger name.
-		if b.Source == "loyalty" && b.First == "" && b.Last == "" {
-			fmt.Printf("\033[2mPNR %s (loyalty-discovered) needs a name — add with: milk flights --add %s LASTNAME/FIRSTNAME\033[0m\n", b.PNR, b.PNR)
-			continue
-		}
-
 		cached := cache.Entries[b.PNR]
 		forceRefresh := *refreshFlag && (refreshPNR == "" || b.PNR == refreshPNR)
 		if !forceRefresh && IsCacheFresh(cached) {
 			results[b.PNR] = cached
 		} else {
 			toFetch = append(toFetch, b)
-			results[b.PNR] = nil // placeholder
+			results[b.PNR] = nil
 		}
 	}
 
@@ -295,7 +236,7 @@ func (h *Handler) Execute(args []string) error {
 					entry.SessionHeaders = headers
 				}
 			} else {
-				entry = FetchBooking(booking, !*visibleFlag)
+				entry = fetchWithBrowser(booking, !*visibleFlag)
 			}
 			mu.Lock()
 			if entry.RawError != "" || len(entry.Flights) == 0 {
@@ -355,101 +296,29 @@ func (h *Handler) Execute(args []string) error {
 	return nil
 }
 
-// discoverLoyaltyPNRsForAll fans out loyalty PNR discovery for all accounts
-// in parallel. Returns the total count of newly added PNRs.
-func discoverLoyaltyPNRsForAll(accounts []passengerEntry, cache *CacheFile, headless bool) int {
-	type result struct {
-		entry passengerEntry
-		pnrs  []string
-		err   error
+// fetchWithBrowser captures session headers via a browser session for b, then
+// immediately uses them to fetch b from the API.
+func fetchWithBrowser(b Booking, headless bool) *CacheEntry {
+	entry := &CacheEntry{
+		PNR:       b.PNR,
+		Passenger: formatName(b.First, b.Last),
 	}
-
-	results := make([]result, len(accounts))
-	var wg sync.WaitGroup
-	sem := make(chan struct{}, maxConcurrent)
-
-	for i, account := range accounts {
-		wg.Add(1)
-		sem <- struct{}{}
-		go func(idx int, entry passengerEntry) {
-			defer wg.Done()
-			defer func() { <-sem }()
-			pnrs, err := discoverLoyaltyPNRs(entry, cache, headless)
-			results[idx] = result{entry: entry, pnrs: pnrs, err: err}
-		}(i, account)
-	}
-	wg.Wait()
-
-	total := 0
-	for _, r := range results {
-		if r.err != nil {
-			fmt.Printf("\033[2mWarning: loyalty discovery for %s/%s failed: %v\033[0m\n",
-				r.entry.LastName, r.entry.FirstName, r.err)
-			continue
-		}
-		if len(r.pnrs) == 0 {
-			continue
-		}
-		n, err := MergeLoyaltyPNRs(r.pnrs, r.entry.FirstName, r.entry.LastName)
-		if err != nil {
-			fmt.Printf("\033[2mWarning: could not merge loyalty PNRs for %s/%s: %v\033[0m\n",
-				r.entry.LastName, r.entry.FirstName, err)
-			continue
-		}
-		total += n
-		if n > 0 {
-			fmt.Printf("\033[2mLoyalty: added %d new PNR(s) for %s/%s\033[0m\n",
-				n, r.entry.LastName, r.entry.FirstName)
-		}
-	}
-	return total
-}
-
-// discoverLoyaltyPNRs fetches upcoming activities for a single SkyMiles account.
-// It uses a cached session if fresh, otherwise runs headless login to capture a new one.
-func discoverLoyaltyPNRs(entry passengerEntry, cache *CacheFile, headless bool) ([]string, error) {
-	tryFetch := func(headers map[string]string) ([]string, error) {
-		activities, err := FetchFutureActivities(entry.MemberID, headers)
-		if err != nil {
-			return nil, err
-		}
-		return ExtractPNRsFromActivities(activities), nil
-	}
-
-	// Try cached session first.
-	if ls := cache.LoyaltySessions[entry.MemberID]; IsLoyaltySessionFresh(ls) {
-		pnrs, err := tryFetch(ls.Headers)
-		if err == nil {
-			return pnrs, nil
-		}
-		if !errors.Is(err, ErrLoyaltyUnauthorized) {
-			return nil, err
-		}
-		// Fall through to re-login on auth error.
-	}
-
-	// Need fresh credentials.
-	if entry.MemberID == "" || entry.Password == "" {
-		return nil, fmt.Errorf("no credentials stored for member %s — use: milk flights --set-account LASTNAME/FIRSTNAME PASSWORD MEMBERID",
-			entry.MemberID)
-	}
-
-	fmt.Printf("Opening browser to log in for %s/%s…\n", entry.LastName, entry.FirstName)
-	headers, err := CaptureLoyaltySessionHeaders(entry.MemberID, entry.Password, headless)
+	headers, err := CaptureSessionHeaders(b, headless)
 	if err != nil {
-		return nil, fmt.Errorf("login failed: %w", err)
+		entry.RawError = err.Error()
+		return entry
 	}
-
-	// Store the new session in cache.
-	if cache.LoyaltySessions == nil {
-		cache.LoyaltySessions = make(map[string]*LoyaltySessionCache)
+	entry.SessionHeaders = headers
+	apiEntry := FetchBookingFromAPI(b, headers)
+	if apiEntry.RawError != "" || len(apiEntry.Flights) == 0 {
+		if apiEntry.RawError != "" {
+			entry.RawError = fmt.Sprintf("API: %s", apiEntry.RawError)
+		} else {
+			entry.RawError = "API returned no flights"
+		}
+		return entry
 	}
-	cache.LoyaltySessions[entry.MemberID] = &LoyaltySessionCache{
-		Headers:    headers,
-		CapturedAt: time.Now().UTC(),
-	}
-
-	return tryFetch(headers)
+	return apiEntry
 }
 
 func containsBooking(list []Booking, pnr string) bool {

@@ -8,26 +8,13 @@ import (
 )
 
 const (
-	cacheMaxAge           = 6 * time.Hour
-	nearDepartureWindow   = 24 * time.Hour
-	loyaltySessionMaxAge  = 4 * time.Hour
+	cacheMaxAge         = 6 * time.Hour
+	nearDepartureWindow = 24 * time.Hour
 )
 
 // CacheFile is the top-level structure persisted to cache.json.
 type CacheFile struct {
-	Entries         map[string]*CacheEntry          `json:"entries"`
-	LoyaltySessions map[string]*LoyaltySessionCache `json:"loyalty_sessions,omitempty"` // keyed by member_id
-}
-
-// LoyaltySessionCache holds a captured JWT and related headers for a SkyMiles account.
-type LoyaltySessionCache struct {
-	Headers    map[string]string `json:"headers"`
-	CapturedAt time.Time         `json:"captured_at"`
-}
-
-// IsLoyaltySessionFresh returns true if ls was captured within loyaltySessionMaxAge.
-func IsLoyaltySessionFresh(ls *LoyaltySessionCache) bool {
-	return ls != nil && time.Since(ls.CapturedAt) < loyaltySessionMaxAge
+	Entries map[string]*CacheEntry `json:"entries"`
 }
 
 // CacheEntry is the persisted result for one PNR.
@@ -48,8 +35,7 @@ func cacheFile() string {
 // Supports backward-compat migration from the old flat map[string]*CacheEntry format.
 func LoadCache() *CacheFile {
 	out := &CacheFile{
-		Entries:         make(map[string]*CacheEntry),
-		LoyaltySessions: make(map[string]*LoyaltySessionCache),
+		Entries: make(map[string]*CacheEntry),
 	}
 	data, err := os.ReadFile(cacheFile())
 	if err != nil {
@@ -58,9 +44,6 @@ func LoadCache() *CacheFile {
 
 	// Try new format first.
 	if err := json.Unmarshal(data, out); err == nil && out.Entries != nil {
-		if out.LoyaltySessions == nil {
-			out.LoyaltySessions = make(map[string]*LoyaltySessionCache)
-		}
 		return out
 	}
 
