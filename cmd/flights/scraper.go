@@ -2,6 +2,7 @@ package flights
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -27,6 +28,9 @@ func CaptureSessionHeaders(b Booking, headless bool) (map[string]string, error) 
 		Headless(headless).
 		Set("disable-blink-features", "AutomationControlled").
 		Set("no-sandbox", "")
+	if binPath := os.Getenv("MILK_BROWSER"); binPath != "" {
+		l = l.Bin(binPath)
+	}
 	u, launchErr := l.Launch()
 	if launchErr != nil {
 		return nil, fmt.Errorf("browser launch failed: %v", launchErr)

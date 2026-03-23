@@ -34,8 +34,12 @@ func (h *Handler) Execute(args []string) error {
 	patternFlag := h.FlagSet.String("p", "", "Pattern type(s) to search (ex. -p VIP,platinum)")
 	h.FlagSet.StringVar(patternFlag, "pattern", "", "Same as -p")
 
+	addFlag := h.FlagSet.String("add", "", "Add area code(s) to the default list (ex. --add 917,646)")
+	removeFlag := h.FlagSet.String("remove", "", "Remove area code(s) from the default list (ex. --remove 202,212)")
+	listFlag := h.FlagSet.Bool("list", false, "List configured default area codes")
+
 	canadaFlag := h.FlagSet.Bool("Canada", false, "Shorthand for -r Canada")
-        CANFlag := h.FlagSet.Bool("CAN", false, "Shorthand for -r CAN")
+	CANFlag := h.FlagSet.Bool("CAN", false, "Shorthand for -r CAN")
 	CAFlag := h.FlagSet.Bool("CA", false, "Shorthand for -r CA")
 	NYFlag := h.FlagSet.Bool("NY", false, "Shorthand for -r NY")
 	NYCFlag := h.FlagSet.Bool("NYC", false, "Shorthand for -r NYC")
@@ -50,19 +54,33 @@ func (h *Handler) Execute(args []string) error {
 		fmt.Println("  milk numbers -c 212 415 808 -r Canada -p VIP,platinum")
 		fmt.Println("  milk numbers --code 212,415,808 --region TX --pattern VIP")
 		fmt.Println("  milk numbers -c 416 604")
+		fmt.Println("  milk numbers --add 917,646")
+		fmt.Println("  milk numbers --remove 202,212")
+		fmt.Println("  milk numbers --list")
 	}
 
 	if err := h.FlagSet.Parse(args); err != nil {
 		return err
 	}
 
+	// Config management flags are handled before any search logic.
+	if *addFlag != "" {
+		return AddDefaultCodes(util.SplitList(*addFlag))
+	}
+	if *removeFlag != "" {
+		return RemoveDefaultCodes(util.SplitList(*removeFlag))
+	}
+	if *listFlag {
+		return ListDefaultCodes(h.cfg.GetRegionCodes("default"))
+	}
+
 	region := *regionFlag
 	if *canadaFlag {
 		region = "Canada"
 	}
-        if *CANFlag {
-                region = "CAN"
-        }
+	if *CANFlag {
+		region = "CAN"
+	}
 	if *CAFlag {
 		region = "CA"
 	}
@@ -92,9 +110,14 @@ func (h *Handler) Execute(args []string) error {
 	}
 
 	if len(codes) == 0 {
-		codes = h.cfg.GetRegionCodes("default")
-		if codes == nil {
-			return fmt.Errorf("no area codes specified and default region not found")
+		// Prefer user-configured defaults over built-in defaults.
+		if userCfg, err := loadNumbersConfig(); err == nil && userCfg != nil && len(userCfg.DefaultCodes) > 0 {
+			codes = userCfg.DefaultCodes
+		} else {
+			codes = h.cfg.GetRegionCodes("default")
+			if codes == nil {
+				return fmt.Errorf("no area codes specified and default region not found")
+			}
 		}
 	}
 
