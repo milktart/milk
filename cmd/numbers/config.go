@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/milktart/milk/pkg/tui"
 )
 
 type numbersConfig struct {
@@ -89,53 +91,81 @@ func AddDefaultCodes(codes []string) error {
 	return nil
 }
 
-// RemoveDefaultCodes removes one or more codes from the user's default list.
-func RemoveDefaultCodes(codes []string) error {
+// RemoveDefaultCodesInteractive presents an interactive multi-select list of
+// the current default codes and removes the ones the user selects.
+func RemoveDefaultCodesInteractive(builtinDefaults []string) error {
 	cfg, err := loadNumbersConfig()
 	if err != nil {
 		return err
 	}
-	if cfg == nil {
-		return fmt.Errorf("no custom default codes configured")
+
+	codes := builtinDefaults
+	usingCustom := false
+	if cfg != nil && len(cfg.DefaultCodes) > 0 {
+		codes = cfg.DefaultCodes
+		usingCustom = true
 	}
-	remove := make(map[string]bool, len(codes))
-	for _, c := range codes {
-		remove[strings.TrimSpace(c)] = true
+	if len(codes) == 0 {
+		fmt.Println("No codes configured.")
+		return nil
 	}
-	var updated, removed []string
-	for _, c := range cfg.DefaultCodes {
-		if remove[c] {
-			removed = append(removed, c)
-		} else {
-			updated = append(updated, c)
-		}
+
+	items := make([]tui.Item, len(codes))
+	for i, c := range codes {
+		items[i] = tui.Item{Label: c, Group: "Area Codes"}
 	}
-	for _, c := range codes {
-		c = strings.TrimSpace(c)
-		found := false
-		for _, r := range removed {
-			if r == c {
-				found = true
-				break
-			}
-		}
-		if !found {
-			fmt.Printf("%s not found in default codes.\n", c)
-		}
-	}
-	if len(removed) == 0 {
-		return fmt.Errorf("none of the specified codes were found")
-	}
-	cfg.DefaultCodes = updated
-	if err := saveNumbersConfig(cfg); err != nil {
+
+	indices, err := tui.MultiSelect("Select codes to remove:", items)
+	if err != nil {
 		return err
 	}
+	if len(indices) == 0 {
+		fmt.Println("Nothing removed.")
+		return nil
+	}
+
+	remove := make(map[int]bool, len(indices))
+	for _, i := range indices {
+		remove[i] = true
+	}
+
+	var kept, removed []string
+	for i, c := range codes {
+		if remove[i] {
+			removed = append(removed, c)
+		} else {
+			kept = append(kept, c)
+		}
+	}
+
+	if usingCustom {
+		if cfg == nil {
+			cfg = &numbersConfig{}
+		}
+		cfg.DefaultCodes = kept
+		if err := saveNumbersConfig(cfg); err != nil {
+			return err
+		}
+	} else {
+		// Promote built-ins minus the removed ones to a custom config.
+		newCfg := &numbersConfig{DefaultCodes: kept}
+		if err := saveNumbersConfig(newCfg); err != nil {
+			return err
+		}
+	}
+
 	fmt.Printf("Removed %s from default codes.\n", strings.Join(removed, ", "))
 	return nil
 }
 
 // ListDefaultCodes prints the user's configured default codes, or a note if none are set.
+// Kept for internal use; prefer ListCodes for the CLI.
 func ListDefaultCodes(builtinDefaults []string) error {
+	return ListCodes(builtinDefaults)
+}
+
+// ListCodes prints the user's configured default codes.
+func ListCodes(builtinDefaults []string) error {
 	cfg, err := loadNumbersConfig()
 	if err != nil {
 		return err

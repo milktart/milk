@@ -52,7 +52,7 @@ func main() {
   // Route to subcommands
   switch strings.ToLower(subcommand) {
     case "numbers":
-      cfg, err := config.LoadFromBytes()
+      cfg, err := config.LoadWithUserOverride()
       if err != nil {
         fmt.Fprintf(os.Stderr, "Error: %v\n", err)
         os.Exit(1)
