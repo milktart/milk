@@ -11,6 +11,11 @@ builds:
     # The final name of the binary file
     binary: milk
 
+    # Inject the git tag into main.VERSION at link time.
+    # {{ .Version }} is the tag without the leading 'v' (e.g. "0.1.11").
+    ldflags:
+      - -s -w -X main.VERSION={{.Version}}
+
     # List of operating systems to build for
     goos:
       - linux

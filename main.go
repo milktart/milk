@@ -12,10 +12,11 @@ import (
   "github.com/milktart/milk/pkg/config"
 )
 
-const (
-  TOOLNAME = "milk"
-  VERSION  = "0.0.14"
-)
+const TOOLNAME = "milk"
+
+// VERSION is set at build time via -ldflags "-X main.VERSION=..."
+// Falls back to "dev" for local builds without ldflags.
+var VERSION = "dev"
 
 func printMainMenu() {
   fmt.Printf("%s - A multi-use CLI tool\n\n", TOOLNAME)
