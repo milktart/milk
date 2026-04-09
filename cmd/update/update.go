@@ -53,7 +53,7 @@ func CheckAndNotify(current string) {
 		return
 	}
 	if newerThan(latest, current) {
-		fmt.Printf("%s⚠  New version available: v%s → v%s. Run 'milk update' to upgrade.%s\n\n", yellow, current, latest, nc)
+		fmt.Printf("%s⚠  New version available: v%s → v%s. Run 'milk update' to upgrade.%s\n", yellow, current, latest, nc)
 	}
 }
 
