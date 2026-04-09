@@ -40,6 +40,11 @@ func LatestVersion(timeout time.Duration) string {
 	return strings.TrimPrefix(r.TagName, "v")
 }
 
+const (
+	yellow = "\033[1;93m"
+	nc     = "\033[0m"
+)
+
 // CheckAndNotify prints an upgrade notice if a newer version is available.
 // It runs the network check with a short timeout so it never blocks the user.
 func CheckAndNotify(current string) {
@@ -48,8 +53,7 @@ func CheckAndNotify(current string) {
 		return
 	}
 	if newerThan(latest, current) {
-		fmt.Printf("\n  Update available: v%s → v%s\n", current, latest)
-		fmt.Printf("  Run 'milk update' to upgrade.\n\n")
+		fmt.Printf("%s⚠  New version available: v%s → v%s. Run 'milk update' to upgrade.%s\n\n", yellow, current, latest, nc)
 	}
 }
 
