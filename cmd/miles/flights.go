@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"math"
+	"strings"
 )
 
 // Airport represents an airport with its geographical coordinates
@@ -133,19 +134,34 @@ func calculateEarnings(airlineFare string, distance float64, loyaltyStatus strin
 	return Earnings{MQD: mqd, Miles: totalMiles}
 }
 
+const (
+	colReset  = "\033[0m"
+	colBold   = "\033[1m"
+	colDim    = "\033[2m"
+	colCyan   = "\033[1;96m"
+	colYellow = "\033[1;93m"
+	colGreen  = "\033[1;92m"
+)
+
+type legResult struct {
+	segment  string
+	distance float64
+	mqd      float64
+	miles    float64
+	hasFare  bool
+}
+
 // calculateAndDisplay performs all calculations and displays the results
 func calculateAndDisplay(legs []Leg, loyaltyStatus string) error {
+	results := make([]legResult, 0, len(legs))
 	var totalDistance, totalMQD, totalMiles float64
-
-	fmt.Println("\nFlight Summary:\n")
-	fmt.Println("Segment\t\tDistance(mi)\tMQDs\tSkyMiles")
+	showEarnings := false
 
 	for _, leg := range legs {
 		fromAirport, ok := airports[leg.From]
 		if !ok {
 			return fmt.Errorf("unknown airport code: %s", leg.From)
 		}
-
 		toAirport, ok := airports[leg.To]
 		if !ok {
 			return fmt.Errorf("unknown airport code: %s", leg.To)
@@ -153,20 +169,122 @@ func calculateAndDisplay(legs []Leg, loyaltyStatus string) error {
 
 		distance := calculateDistance(fromAirport, toAirport)
 		earnings := calculateEarnings(leg.AirlineFare, distance, loyaltyStatus)
+		hasFare := leg.AirlineFare != "" && (earnings.MQD > 0 || earnings.Miles > 0)
+
+		if hasFare {
+			showEarnings = true
+		}
 
 		totalDistance += distance
 		totalMQD += earnings.MQD
 		totalMiles += earnings.Miles
 
-		fmt.Printf("%s → %s\t%.0f\t\t%.0f\t%.0f\n",
-			leg.From, leg.To,
-			distance, earnings.MQD, earnings.Miles)
+		results = append(results, legResult{
+			segment:  leg.From + " → " + leg.To,
+			distance: distance,
+			mqd:      earnings.MQD,
+			miles:    earnings.Miles,
+			hasFare:  hasFare,
+		})
 	}
 
-	fmt.Println("\nTotals:")
-	fmt.Printf("Total Distance: %.0f mi\n", totalDistance)
-	fmt.Printf("Total MQDs: %.0f\n", totalMQD)
-	fmt.Printf("Total SkyMiles: %.0f\n\n", totalMiles)
+	// Column widths
+	const segW, distW, earnW = 11, 14, 12
+
+	divider := func(left, mid, right, horiz string) string {
+		seg := strings.Repeat(horiz, segW+2)
+		dist := strings.Repeat(horiz, distW+2)
+		if showEarnings {
+			earn := strings.Repeat(horiz, earnW+2)
+			return left + seg + mid + dist + mid + earn + mid + earn + right
+		}
+		return left + seg + mid + dist + right
+	}
+
+	pad := func(s string, w int) string {
+		if len(s) >= w {
+			return s
+		}
+		return s + strings.Repeat(" ", w-len(s))
+	}
+	lpad := func(s string, w int) string {
+		if len(s) >= w {
+			return s
+		}
+		return strings.Repeat(" ", w-len(s)) + s
+	}
+
+	fmt.Println()
+	fmt.Println(colCyan + colBold + "  Flight Summary" + colReset)
+	fmt.Println()
+
+	// Top border
+	fmt.Println(colDim + divider("┌", "┬", "┐", "─") + colReset)
+
+	// Header
+	if showEarnings {
+		fmt.Printf(colCyan+"│ %s │ %s │ %s │ %s │\n"+colReset,
+			colBold+pad("Segment", segW)+colCyan,
+			lpad("Distance (mi)", distW),
+			lpad("MQDs", earnW),
+			lpad("SkyMiles", earnW),
+		)
+	} else {
+		fmt.Printf(colCyan+"│ %s │ %s │\n"+colReset,
+			colBold+pad("Segment", segW)+colCyan,
+			lpad("Distance (mi)", distW),
+		)
+	}
+
+	// Header divider
+	fmt.Println(colDim + divider("├", "┼", "┤", "─") + colReset)
+
+	// Rows
+	for _, r := range results {
+		dist := fmt.Sprintf("%.0f mi", r.distance)
+		if showEarnings {
+			mqd := "—"
+			skm := "—"
+			if r.hasFare {
+				mqd = fmt.Sprintf("%.0f", r.mqd)
+				skm = fmt.Sprintf("%.0f", r.miles)
+			}
+			fmt.Printf("│ %s │ %s │ %s │ %s │\n",
+				colYellow+pad(r.segment, segW)+colReset,
+				lpad(dist, distW),
+				lpad(mqd, earnW),
+				lpad(skm, earnW),
+			)
+		} else {
+			fmt.Printf("│ %s │ %s │\n",
+				colYellow+pad(r.segment, segW)+colReset,
+				lpad(dist, distW),
+			)
+		}
+	}
+
+	// Footer divider
+	fmt.Println(colDim + divider("├", "┼", "┤", "─") + colReset)
+
+	// Totals row
+	totalDist := fmt.Sprintf("%.0f mi", totalDistance)
+	if showEarnings {
+		fmt.Printf("│ %s │ %s │ %s │ %s │\n",
+			colBold+colGreen+pad("Total", segW)+colReset,
+			colBold+lpad(totalDist, distW)+colReset,
+			colBold+lpad(fmt.Sprintf("%.0f", totalMQD), earnW)+colReset,
+			colBold+lpad(fmt.Sprintf("%.0f", totalMiles), earnW)+colReset,
+		)
+	} else {
+		fmt.Printf("│ %s │ %s │\n",
+			colBold+colGreen+pad("Total", segW)+colReset,
+			colBold+lpad(totalDist, distW)+colReset,
+		)
+	}
+
+	// Bottom border
+	fmt.Println(colDim + divider("└", "┴", "┘", "─") + colReset)
+	fmt.Println()
 
 	return nil
 }
