@@ -22,6 +22,8 @@ func (h *Handler) Execute(args []string) error {
 	roundtripFlag := h.FlagSet.Bool("roundtrip", false, "Calculate round trip distance (return journey)")
 	roundtripShortFlag := h.FlagSet.Bool("R", false, "Shorthand for --roundtrip")
 	loyaltyFlag := h.FlagSet.String("l", "None", "Loyalty status for bonus miles (DM, PM, GM, SM, or None)")
+	priceFlag := h.FlagSet.Float64("price", 0, "Ticket price to plot on the value bar")
+	h.FlagSet.Float64Var(priceFlag, "p", 0, "Shorthand for --price")
 
 	h.FlagSet.Usage = func() {
 		fmt.Fprintf(h.FlagSet.Output(), "Usage: milk miles [options] <airport pairs>\n\n")
@@ -48,6 +50,7 @@ func (h *Handler) Execute(args []string) error {
 
 	isRoundTrip := *roundtripFlag || *roundtripShortFlag
 	loyaltyStatus := *loyaltyFlag
+	price := *priceFlag
 
 	// Parse positional arguments to extract routes
 	routeArgs := h.FlagSet.Args()
@@ -80,7 +83,7 @@ func (h *Handler) Execute(args []string) error {
 	}
 
 	// Calculate and display results
-	return calculateAndDisplay(legs, loyaltyStatus)
+	return calculateAndDisplay(legs, loyaltyStatus, price)
 }
 
 // Leg represents a flight leg with origin, destination, and optional airline fare class
